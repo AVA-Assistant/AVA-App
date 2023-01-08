@@ -43,7 +43,7 @@ class SliderVerticalWidget extends StatefulWidget {
 }
 
 class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
-  double value = 75;
+  double value = 0;
 
   void state(double state) {
     changeLed(255 - state);
@@ -77,8 +77,8 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
         trackShape: const RectangularSliderTrackShape(),
 
         /// ticks in between
-        activeTickMarkColor: Colors.transparent,
-        inactiveTickMarkColor: Colors.transparent,
+        // activeTickMarkColor: Colors.transparent,
+        // inactiveTickMarkColor: Colors.transparent,
       ),
       child: SizedBox(
         height: 400,
@@ -96,10 +96,8 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
                       min: min,
                       max: max,
                       activeColor: Colors.amber,
-                      divisions: 20,
                       label: value.round().toString(),
                       onChanged: (value) => state(value),
-                      onChangeEnd: (value) => state(value),
                     ),
                   ),
                   Center(
@@ -123,9 +121,12 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
     );
   }
 
-  Widget buildSideLabel(String value) => Text(
-        value,
-        style: const TextStyle(
-            fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+  Widget buildSideLabel(String value) => TextButton(
+        onPressed: () => state(value == "On" ? 255 : 0),
+        child: Text(
+          value,
+          style: const TextStyle(
+              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
       );
 }
