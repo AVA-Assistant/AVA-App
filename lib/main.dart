@@ -46,7 +46,7 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
   double value = 0;
 
   void state(double state) {
-    changeLed(255 - state);
+    changeLed(state);
     setState(() => value = state);
   }
 
