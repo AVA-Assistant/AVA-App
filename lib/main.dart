@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:socket_io_client/socket_io_client.dart';
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -45,21 +45,37 @@ class SliderVerticalWidget extends StatefulWidget {
 class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
   double value = 0;
 
-  void state(double state) {
-    changeLed(state);
+  void state(double state, bool finalValue) {
+    socket.emit("led", {'state': state, 'final': finalValue});
     setState(() => value = state);
   }
 
-  Future<http.Response> changeLed(double newState) {
-    return http.post(
-      Uri.parse('http://192.168.1.191:2500/led'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, double>{
-        'status': newState,
-      }),
-    );
+  late Socket socket;
+  @override
+  void initState() {
+    initSocket();
+    super.initState();
+  }
+
+  initSocket() {
+    socket = io("http://192.168.1.191:2500", <String, dynamic>{
+      'force new connection': true,
+      "transports": ['websocket']
+    });
+
+    socket.onConnect((_) {
+      socket.emit("ledState");
+      print('connected');
+    });
+
+    socket.on("ledState", (data) {
+      setState(() => value = double.parse(json.decode(data)["state"]));
+    });
+
+    socket.on("led", (data) {
+      // print(json.decode(data)["state"]);
+      setState(() => value = json.decode(data)["state"]);
+    });
   }
 
   @override
@@ -73,12 +89,7 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
         thumbShape: SliderComponentShape.noOverlay,
         overlayShape: SliderComponentShape.noOverlay,
         valueIndicatorShape: SliderComponentShape.noOverlay,
-
         trackShape: const RectangularSliderTrackShape(),
-
-        /// ticks in between
-        // activeTickMarkColor: Colors.transparent,
-        // inactiveTickMarkColor: Colors.transparent,
       ),
       child: SizedBox(
         height: 400,
@@ -97,7 +108,8 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
                       max: max,
                       activeColor: Colors.amber,
                       label: value.round().toString(),
-                      onChanged: (value) => state(value),
+                      onChanged: (value) => state(value, false),
+                      onChangeEnd: (value) => state(value, true),
                     ),
                   ),
                   Center(
@@ -122,7 +134,7 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
   }
 
   Widget buildSideLabel(String value) => TextButton(
-        onPressed: () => state(value == "On" ? 255 : 0),
+        onPressed: () => state(value == "On" ? 255 : 0, true),
         child: Text(
           value,
           style: const TextStyle(
