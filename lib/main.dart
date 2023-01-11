@@ -58,7 +58,7 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
   }
 
   initSocket() {
-    socket = io("http://192.168.1.191:2500", <String, dynamic>{
+    socket = io("http://192.168.1.144:2500", <String, dynamic>{
       'force new connection': true,
       "transports": ['websocket']
     });
