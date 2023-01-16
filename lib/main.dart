@@ -137,8 +137,7 @@ class _SliderVerticalWidgetState extends State<SliderVerticalWidget> {
         onPressed: () => state(value == "On" ? 255 : 0, true),
         child: Text(
           value,
-          style: const TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       );
 }
