@@ -1,6 +1,6 @@
 import 'dart:ui';
-
-import 'package:ava_app/header.dart';
+import 'package:ava_app/sections/devices.dart';
+import 'package:ava_app/sections/header.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatefulWidget {
@@ -27,6 +27,8 @@ class _AppState extends State<App> {
 
   double temp = 32;
   double humidity = 70.2;
+  List scenes = [];
+  List devices = [];
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +44,20 @@ class _AppState extends State<App> {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, top: 75, right: 20),
-          child: Column(children: [
-            Header(
-              humidity: humidity,
-              temp: temp,
-              time: time,
-            ),
-            const SizedBox(height: 40)
-          ]),
+          padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+          child: SafeArea(
+            child: Column(children: [
+              Header(
+                humidity: humidity,
+                temp: temp,
+                time: time,
+              ),
+              // const SizedBox(height: 40),
+              // Scenes(time: time, scenes: scenes),
+              const SizedBox(height: 40),
+              Devices(time: time, devices: devices)
+            ]),
+          ),
         ),
       ),
     );
