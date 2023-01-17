@@ -21,6 +21,9 @@ class Devices extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+            ),
             onPressed: () {},
             child: IntrinsicWidth(
               child: Row(
@@ -47,8 +50,9 @@ class Devices extends StatelessWidget {
         const SizedBox(height: 5),
         // const Device(),
         GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: 30,
+          itemCount: devices.length,
           itemBuilder: (_, index) {
             return const Device();
           },

@@ -28,35 +28,47 @@ class _AppState extends State<App> {
   double temp = 32;
   double humidity = 70.2;
   List scenes = [];
-  List devices = [];
+  List devices = [
+    {
+      'id': 0,
+      'name': "Main lights",
+      'mqtt_id': "lights_1",
+      'icon': Icons.light,
+      'type': 'on_off',
+      'state': 'off',
+    }
+  ];
 
   @override
   Widget build(BuildContext context) {
     String time = getCurrentTime();
 
     return Container(
+      constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/$time.jpg'),
           fit: BoxFit.cover,
         ),
       ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
-          child: SafeArea(
-            child: Column(children: [
-              Header(
-                humidity: humidity,
-                temp: temp,
-                time: time,
-              ),
-              // const SizedBox(height: 40),
-              // Scenes(time: time, scenes: scenes),
-              const SizedBox(height: 40),
-              Devices(time: time, devices: devices)
-            ]),
+      child: SingleChildScrollView(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+            child: SafeArea(
+              child: Column(children: [
+                Header(
+                  humidity: humidity,
+                  temp: temp,
+                  time: time,
+                ),
+                // const SizedBox(height: 40),
+                // Scenes(time: time, scenes: scenes),
+                const SizedBox(height: 40),
+                if (devices.isNotEmpty) Devices(time: time, devices: devices)
+              ]),
+            ),
           ),
         ),
       ),
