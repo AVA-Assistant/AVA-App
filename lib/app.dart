@@ -31,35 +31,42 @@ class _AppState extends State<App> {
   List scenes = [
     {
       'id': "scene_0",
+      'name': "Off",
+      'icon': Icons.stop_circle_sharp,
+      'actions': [],
+    },
+    {
+      'id': "scene_0",
       'name': "Reading",
       'icon': Icons.menu_book_rounded,
       'actions': [],
     },
     {
       'id': "scene_0",
-      'name': "a",
-      'icon': Icons.menu_book_rounded,
+      'name': "Playing",
+      'icon': Icons.gamepad_outlined,
       'actions': [],
     },
     {
       'id': "scene_0",
-      'name': "Re14324234ading",
-      'icon': Icons.menu_book_rounded,
+      'name': "Morning",
+      'icon': Icons.sunny,
       'actions': [],
     },
     {
       'id': "scene_0",
-      'name': "Re14324234ading",
-      'icon': Icons.menu_book_rounded,
+      'name': "Relax",
+      'icon': Icons.beach_access_sharp,
       'actions': [],
     },
     {
       'id': "scene_0",
-      'name': "Re14324234ading",
-      'icon': Icons.menu_book_rounded,
+      'name': "Work",
+      'icon': Icons.work,
       'actions': [],
     },
   ];
+
   List devices = [
     {
       'id': "dev_0",
@@ -82,6 +89,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     String time = getCurrentTime();
+    scenes.sort((a, b) => a["name"].length.compareTo(b["name"].length));
 
     return Container(
       constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),

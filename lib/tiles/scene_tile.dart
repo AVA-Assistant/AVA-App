@@ -39,7 +39,7 @@ class _SceneTileState extends State<SceneTile> {
               Icon(
                 widget.scene["icon"],
                 size: 30,
-                color: Colors.white,
+                color: state == "off" ? const Color(0xFFFFFFFF) : const Color(0xff333333),
               ),
               const SizedBox(
                 width: 15,
