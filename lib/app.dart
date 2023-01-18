@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:ava_app/sections/devices.dart';
 import 'package:ava_app/sections/header.dart';
+import 'package:ava_app/sections/scenes.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatefulWidget {
@@ -27,10 +28,41 @@ class _AppState extends State<App> {
 
   double temp = 32;
   double humidity = 70.2;
-  List scenes = [];
+  List scenes = [
+    {
+      'id': "scene_0",
+      'name': "Reading",
+      'icon': Icons.menu_book_rounded,
+      'actions': [],
+    },
+    {
+      'id': "scene_0",
+      'name': "a",
+      'icon': Icons.menu_book_rounded,
+      'actions': [],
+    },
+    {
+      'id': "scene_0",
+      'name': "Re14324234ading",
+      'icon': Icons.menu_book_rounded,
+      'actions': [],
+    },
+    {
+      'id': "scene_0",
+      'name': "Re14324234ading",
+      'icon': Icons.menu_book_rounded,
+      'actions': [],
+    },
+    {
+      'id': "scene_0",
+      'name': "Re14324234ading",
+      'icon': Icons.menu_book_rounded,
+      'actions': [],
+    },
+  ];
   List devices = [
     {
-      'id': 0,
+      'id': "dev_0",
       'name': "Main lights",
       'mqtt_id': "lights_1",
       'icon': Icons.lightbulb,
@@ -38,7 +70,7 @@ class _AppState extends State<App> {
       'state': 'off',
     },
     {
-      'id': 1,
+      'id': "dev_1",
       'name': "Main leds",
       'mqtt_id': "lights_1",
       'icon': Icons.light_mode_rounded,
@@ -62,17 +94,17 @@ class _AppState extends State<App> {
       child: SingleChildScrollView(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
-            child: SafeArea(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, top: 20),
               child: Column(children: [
                 Header(
                   humidity: humidity,
                   temp: temp,
                   time: time,
                 ),
-                // const SizedBox(height: 40),
-                // Scenes(time: time, scenes: scenes),
+                const SizedBox(height: 40),
+                Scenes(time: time, scenes: scenes),
                 const SizedBox(height: 40),
                 if (devices.isNotEmpty) Devices(time: time, devices: devices)
               ]),
