@@ -33,9 +33,17 @@ class _AppState extends State<App> {
       'id': 0,
       'name': "Main lights",
       'mqtt_id': "lights_1",
-      'icon': Icons.light,
+      'icon': Icons.lightbulb,
       'type': 'on_off',
       'state': 'off',
+    },
+    {
+      'id': 1,
+      'name': "Main leds",
+      'mqtt_id': "lights_1",
+      'icon': Icons.light_mode_rounded,
+      'type': 'on_off',
+      'state': 'auto',
     }
   ];
 

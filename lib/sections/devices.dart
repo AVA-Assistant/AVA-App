@@ -47,19 +47,19 @@ class Devices extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 15),
         // const Device(),
         GridView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: devices.length,
           itemBuilder: (_, index) {
-            return const Device();
+            return Device(device: devices[index]);
           },
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 33 / 14,
-            crossAxisSpacing: 20,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 9 / 4,
+            crossAxisSpacing: 10,
             mainAxisSpacing: 20,
           ),
         )
