@@ -1,7 +1,7 @@
 import 'dart:ui';
-import 'package:ava_app/sections/devices.dart';
-import 'package:ava_app/sections/header.dart';
-import 'package:ava_app/sections/scenes.dart';
+import 'package:ava_app/main_sections/devices_section.dart';
+import 'package:ava_app/main_sections/header_section.dart';
+import 'package:ava_app/main_sections/scenes_section.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatefulWidget {

@@ -1,7 +1,8 @@
+import 'package:ava_app/screens/devices_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../tiles/device.dart';
+import '../tiles/device_tile.dart';
 
 class Devices extends StatelessWidget {
   final String time;
@@ -26,7 +27,15 @@ class Devices extends StatelessWidget {
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DevicesScreen(
+                            devices: devices,
+                          )),
+                );
+              },
               child: IntrinsicWidth(
                 child: Row(
                   children: [
