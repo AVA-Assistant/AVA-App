@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import '../tiles/scene_tile.dart';
 
 class Scenes extends StatelessWidget {
-  final String time;
-  final List scenes;
-
   const Scenes({
     super.key,
     required this.time,
     required this.scenes,
   });
+
+  final List scenes;
+  final String time;
 
   List<Widget> createScenes() {
     if (scenes.length > 3) {

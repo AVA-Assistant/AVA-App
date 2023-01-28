@@ -1,4 +1,4 @@
-import 'package:ava_app/screens/devices_screen.dart';
+import 'package:ava_app/screens/devices_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

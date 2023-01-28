@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-typedef void StringCallback(String val, int index);
+typedef StringCallback = void Function(String val, int index);
 
 class Device extends StatelessWidget {
   final Map device;

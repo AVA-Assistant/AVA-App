@@ -1,12 +1,12 @@
-import 'package:ava_app/tiles/device_settings.dart';
+import 'package:ava_app/tiles/device_settings_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 class DevicesScreen extends StatefulWidget {
-  final List devices;
-
   const DevicesScreen({super.key, required this.devices});
+
+  final List devices;
 
   @override
   State<DevicesScreen> createState() => _DevicesScreenState();
@@ -16,11 +16,20 @@ class _DevicesScreenState extends State<DevicesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xB1FFFFFF),
+        child: const Icon(
+          Icons.check,
+          color: Color(0xff333333),
+          size: 30,
+        ),
+        onPressed: () => Navigator.pop(context, widget.devices),
+      ),
       backgroundColor: const Color(0xFF222222),
       appBar: CupertinoNavigationBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context, widget.devices),
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
         middle: const Text("Devices", style: TextStyle(color: Colors.white, fontSize: 22)),
