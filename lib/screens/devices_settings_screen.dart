@@ -64,9 +64,14 @@ class _DevicesScreenState extends State<DevicesScreen> {
           child: ReorderableGridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemBuilder: (_, index) => DeviceSettings(
-              device: widget.devices[index],
+            itemBuilder: (_, index) => Dismissible(
+              onDismissed: (direction) => setState(() => widget.devices.removeAt(index)),
               key: ValueKey(index),
+              direction: DismissDirection.up,
+              child: DeviceSettings(
+                device: widget.devices[index],
+                key: ValueKey(index),
+              ),
             ),
             itemCount: widget.devices.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
