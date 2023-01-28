@@ -20,7 +20,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
       appBar: CupertinoNavigationBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, widget.devices),
           icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
         middle: const Text("Devices", style: TextStyle(color: Colors.white, fontSize: 22)),

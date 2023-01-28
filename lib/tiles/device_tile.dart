@@ -1,41 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Device extends StatefulWidget {
+typedef void StringCallback(String val, int index);
+
+class Device extends StatelessWidget {
   final Map device;
+  final StringCallback callback;
+  final int index;
 
-  const Device({super.key, required this.device});
-
-  @override
-  State<Device> createState() {
-    return _DeviceState(state: device['state']);
-  }
-}
-
-class _DeviceState extends State<Device> {
-  String state;
-
-  _DeviceState({required this.state});
+  const Device({
+    super.key,
+    required this.device,
+    required this.callback,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (state == "off") {
-          setState(() {
-            state = "auto";
-          });
+        if (device["state"] == "off" && device["state"] != null) {
+          callback("auto", index);
         } else {
-          setState(() {
-            state = "off";
-          });
+          callback("off", index);
         }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(15)),
-          color: state == "off" ? const Color(0x99141414) : const Color(0xB1FFFFFF),
+          color: device["state"] == "off" || device["state"] == null ? const Color(0x99141414) : const Color(0xB1FFFFFF),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -49,7 +43,7 @@ class _DeviceState extends State<Device> {
                   color: Color(0xCC141414),
                 ),
                 child: Icon(
-                  widget.device["icon"],
+                  device["icon"],
                   size: 28,
                   color: Colors.white,
                 ),
@@ -63,18 +57,18 @@ class _DeviceState extends State<Device> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.device["name"],
+                  device["name"],
                   style: GoogleFonts.heebo(
-                    color: state == "off" ? const Color(0xFFFFFFFF) : const Color(0xff333333),
+                    color: device["state"] == "off" || device["state"] == null ? const Color(0xFFFFFFFF) : const Color(0xff333333),
                     fontSize: 16,
                     height: 1.2,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
-                  state,
+                  device["state"] == null ? "Loading..." : device["state"].toString(),
                   style: GoogleFonts.heebo(
-                    color: state == "off" ? const Color(0xB1FFFFFF) : const Color(0xff333333),
+                    color: device["state"] == "off" || device["state"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
                     fontSize: 14,
                     height: 1.2,
                     fontWeight: FontWeight.w400,

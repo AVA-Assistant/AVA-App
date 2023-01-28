@@ -26,8 +26,6 @@ class _AppState extends State<App> {
     }
   }
 
-  double temp = 32;
-  double humidity = 70.2;
   List scenes = [
     {
       'id': "scene_0",
@@ -67,25 +65,6 @@ class _AppState extends State<App> {
     },
   ];
 
-  List devices = [
-    {
-      'id': "dev_0",
-      'name': "Main lights",
-      'mqtt_id': "lights_1",
-      'icon': Icons.lightbulb,
-      'type': 'on_off',
-      'state': 'off',
-    },
-    {
-      'id': "dev_1",
-      'name': "Main leds",
-      'mqtt_id': "lights_1",
-      'icon': Icons.light_mode_rounded,
-      'type': 'on_off',
-      'state': 'auto',
-    }
-  ];
-
   @override
   Widget build(BuildContext context) {
     String time = getCurrentTime();
@@ -107,14 +86,12 @@ class _AppState extends State<App> {
               padding: const EdgeInsets.only(left: 20, top: 20),
               child: Column(children: [
                 Header(
-                  humidity: humidity,
-                  temp: temp,
                   time: time,
                 ),
                 const SizedBox(height: 40),
                 Scenes(time: time, scenes: scenes),
                 const SizedBox(height: 40),
-                if (devices.isNotEmpty) Devices(time: time, devices: devices)
+                Devices(time: time)
               ]),
             ),
           ),
