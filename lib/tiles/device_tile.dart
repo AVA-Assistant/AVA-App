@@ -21,7 +21,7 @@ class Device extends StatelessWidget {
       onTap: () {
         if (device["state"] == "off" && device["state"] != null) {
           callback("auto", index);
-        } else {
+        } else if (device["state"] != null) {
           callback("off", index);
         }
       },

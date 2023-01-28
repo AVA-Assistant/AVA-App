@@ -32,7 +32,7 @@ class _DevicesState extends State<Devices> {
       'mqtt_id': "lights_1",
       'icon': Icons.light_mode_rounded,
       'type': 'on_off',
-      'state': null,
+      'state': "auto",
     }
   ];
 
