@@ -38,7 +38,7 @@ class DeviceSettings extends StatelessWidget {
             device["name"],
             style: GoogleFonts.heebo(
               color: const Color(0xff333333),
-              fontSize: 18,
+              fontSize: 16,
               height: 1.2,
               fontWeight: FontWeight.w500,
             ),

@@ -1,5 +1,7 @@
 import 'package:ava_app/tiles/device_settings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 class DevicesScreen extends StatefulWidget {
   final List devices;
@@ -14,34 +16,42 @@ class _DevicesScreenState extends State<DevicesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850],
-      appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back),
-          ),
-          title: const Text("Devices"),
-          actions: [
-            IconButton(
-              onPressed: () => {},
-              icon: const Icon(Icons.add),
+      backgroundColor: const Color(0xFF222222),
+      appBar: CupertinoNavigationBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+        ),
+        middle: const Text("Devices", style: TextStyle(color: Colors.white, fontSize: 22)),
+        trailing: IconButton(
+          onPressed: () => {},
+          icon: const Icon(Icons.add, color: Colors.white),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
+          child: ReorderableGridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (_, index) => DeviceSettings(
+              device: widget.devices[index],
+              key: ValueKey(index),
             ),
-          ]),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        child: GridView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: widget.devices.length,
-          itemBuilder: (_, index) {
-            return DeviceSettings(device: widget.devices[index]);
-          },
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 9 / 4,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 20,
+            itemCount: widget.devices.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 9 / 4,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+            ),
+            onReorder: (oldIndex, newIndex) {
+              setState(() {
+                final item = widget.devices.removeAt(oldIndex);
+                widget.devices.insert(newIndex, item);
+              });
+            },
           ),
         ),
       ),
