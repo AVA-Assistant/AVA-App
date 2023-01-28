@@ -50,7 +50,7 @@ class _DevicesState extends State<Devices> {
                 padding: EdgeInsets.zero,
               ),
               onPressed: () async {
-                List newDevices = await Navigator.push(
+                List? newDevices = await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => DevicesScreen(
@@ -59,7 +59,7 @@ class _DevicesState extends State<Devices> {
                   ),
                 );
                 setState(() {
-                  devices = newDevices;
+                  if (newDevices != null) devices = newDevices;
                 });
               },
               child: IntrinsicWidth(
