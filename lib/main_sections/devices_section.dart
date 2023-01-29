@@ -21,7 +21,7 @@ class _DevicesState extends State<Devices> {
     {
       'id': "dev_0",
       'name': "Main lights",
-      'mqtt_id': "lights_1",
+      'mqtt_Id': "lights_1",
       'icon': Icons.lightbulb,
       'type': 'on_off',
       'state': null,
@@ -29,7 +29,7 @@ class _DevicesState extends State<Devices> {
     {
       'id': "dev_1",
       'name': "Main leds",
-      'mqtt_id': "lights_1",
+      'mqtt_Id': "lights_1",
       'icon': Icons.light_mode_rounded,
       'type': 'on_off',
       'state': "auto",

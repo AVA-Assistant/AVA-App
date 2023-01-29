@@ -34,6 +34,8 @@ class _AddDeviceState extends State<AddDevice> {
   }
 
   _turnOnCamera() {
+    FocusScope.of(context).unfocus();
+
     setState(() {
       camera = true;
     });
@@ -149,17 +151,22 @@ class _AddDeviceState extends State<AddDevice> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
-      Map tempMqtt = json.decode(scanData.code.toString());
       setState(() {
-        if (tempMqtt.containsKey("id") && tempMqtt.containsKey("type") && tempMqtt.containsKey("mqtt_id")) {
-          mqtt = tempMqtt;
-          camStatus = "Scanned! Scan again...";
-        } else {
-          camStatus = "Wrong QR code!";
+        try {
+          Map tempMqtt = json.decode(scanData.code.toString());
+          if (tempMqtt.containsKey("id") && tempMqtt.containsKey("type") && tempMqtt.containsKey("mqtt_Id")) {
+            mqtt = tempMqtt;
+            camStatus = "Scanned! Scan again...";
+          } else {
+            camStatus = "Wrong QR code! Scan again.";
+          }
+        } catch (e) {
+          camStatus = "Wrong QR code! Scan again.";
         }
 
         camera = false;
       });
+
       controller.pauseCamera();
     });
   }
