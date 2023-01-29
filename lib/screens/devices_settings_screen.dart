@@ -21,11 +21,22 @@ class _DevicesScreenState extends State<DevicesScreen> {
         elevation: 5,
         backgroundColor: const Color(0xDFFFFFFF),
         child: const Icon(
-          Icons.check,
+          Icons.add,
           color: Color(0xff333333),
           size: 30,
         ),
-        onPressed: () => Navigator.pop(context, widget.devices),
+        onPressed: () async {
+          Map? newDevice = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddDevice(),
+            ),
+          );
+
+          setState(() {
+            if (newDevice != null) widget.devices.add(newDevice);
+          });
+        },
       ),
       backgroundColor: const Color(0xFF222222),
       appBar: CupertinoNavigationBar(
@@ -39,24 +50,6 @@ class _DevicesScreenState extends State<DevicesScreen> {
           ),
         ),
         middle: const Text("Devices", style: TextStyle(color: Colors.white, fontSize: 22)),
-        trailing: TextButton(
-          onPressed: () async {
-            Object? newDevice = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AddDevice(),
-              ),
-            );
-            setState(() {
-              if (newDevice != null) widget.devices.add(newDevice);
-            });
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -65,7 +58,9 @@ class _DevicesScreenState extends State<DevicesScreen> {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (_, index) => Dismissible(
-              onDismissed: (direction) => setState(() => widget.devices.removeAt(index)),
+              onDismissed: (direction) => setState(() {
+                widget.devices.removeAt(index);
+              }),
               key: ValueKey(index),
               direction: DismissDirection.up,
               child: DeviceSettings(

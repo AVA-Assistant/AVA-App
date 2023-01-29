@@ -17,7 +17,7 @@ class _AddDeviceState extends State<AddDevice> {
 
   bool camera = false;
   IconData? icon;
-  String? name;
+  String name = "";
   Map? mqtt;
 
   _pickIcon() async {
@@ -34,13 +34,13 @@ class _AddDeviceState extends State<AddDevice> {
 
   _turnOnCamera() {
     setState(() {
-      camera = !camera;
+      camera = true;
     });
-    controller!.resumeCamera();
+    if (controller != null) controller!.resumeCamera();
   }
 
   _passDataBack() {
-    if (icon != null && name != null && mqtt != null) {
+    if (icon != null && name != "" && mqtt != null) {
       mqtt!["icon"] = icon;
       mqtt!["name"] = name;
 
@@ -66,16 +66,18 @@ class _AddDeviceState extends State<AddDevice> {
           style: TextStyle(color: Colors.white, fontSize: 22),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 5,
-        backgroundColor: const Color(0xDFFFFFFF),
-        onPressed: _passDataBack,
-        child: const Icon(
-          Icons.check,
-          color: Color(0xff333333),
-          size: 30,
-        ),
-      ),
+      floatingActionButton: icon != null && name != "" && mqtt != null
+          ? FloatingActionButton(
+              elevation: 5,
+              backgroundColor: const Color(0xDFFFFFFF),
+              onPressed: _passDataBack,
+              child: const Icon(
+                Icons.check,
+                color: Color(0xff333333),
+                size: 30,
+              ),
+            )
+          : null,
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -163,7 +165,9 @@ class _AddDeviceState extends State<AddDevice> {
 
   @override
   void dispose() {
-    controller!.dispose();
+    if (controller != null) {
+      controller!.dispose();
+    }
     super.dispose();
   }
 }
