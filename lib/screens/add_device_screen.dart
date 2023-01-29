@@ -14,6 +14,7 @@ class AddDevice extends StatefulWidget {
 class _AddDeviceState extends State<AddDevice> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
+  String camStatus = "Scan...";
 
   bool camera = false;
   IconData? icon;
@@ -124,17 +125,11 @@ class _AddDeviceState extends State<AddDevice> {
               "Scan QR code:",
               style: TextStyle(color: Colors.white70, fontSize: 22),
             ),
-            mqtt == null
-                ? TextButton(
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    onPressed: () => _turnOnCamera(),
-                    child: const Text("Scan...", style: TextStyle(fontSize: 20, color: Colors.white)),
-                  )
-                : TextButton(
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    onPressed: () => _turnOnCamera(),
-                    child: const Text("Scaned! Scan again.", style: TextStyle(fontSize: 20, color: Colors.white)),
-                  ),
+            TextButton(
+              style: TextButton.styleFrom(padding: EdgeInsets.zero),
+              onPressed: () => _turnOnCamera(),
+              child: Text(camStatus, style: const TextStyle(fontSize: 20, color: Colors.white)),
+            ),
             if (camera)
               SizedBox(
                 height: 400,
@@ -154,11 +149,17 @@ class _AddDeviceState extends State<AddDevice> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
+      Map tempMqtt = json.decode(scanData.code.toString());
       setState(() {
-        mqtt = json.decode(scanData.code.toString());
+        if (tempMqtt.containsKey("id") && tempMqtt.containsKey("type") && tempMqtt.containsKey("mqtt_id")) {
+          mqtt = tempMqtt;
+          camStatus = "Scanned! Scan again...";
+        } else {
+          camStatus = "Wrong QR code!";
+        }
+
         camera = false;
       });
-
       controller.pauseCamera();
     });
   }
