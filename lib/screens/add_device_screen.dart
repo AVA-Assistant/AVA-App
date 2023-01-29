@@ -24,7 +24,7 @@ class _AddDeviceState extends State<AddDevice> {
   _pickIcon() async {
     IconData? tempIcon = await FlutterIconPicker.showIconPicker(
       context,
-      iconPackModes: [IconPack.material],
+      iconPackModes: [IconPack.cupertino],
       backgroundColor: const Color(0xAA353535),
       iconColor: Colors.white,
     );
@@ -86,60 +86,74 @@ class _AddDeviceState extends State<AddDevice> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Choose a name:",
-              style: TextStyle(color: Colors.white70, fontSize: 22),
+            Center(
+              child: Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(75)),
+                  color: Color(0xFF181818),
+                  boxShadow: [
+                    BoxShadow(color: Color(0x99000000), blurRadius: 10, blurStyle: BlurStyle.solid),
+                  ],
+                ),
+                height: 125,
+                width: 125,
+                child: IconButton(
+                  icon: Icon(icon ?? Icons.question_mark, size: 75, color: Colors.white),
+                  onPressed: _pickIcon,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ),
             ),
+            Center(
+              child: TextButton(
+                onPressed: _pickIcon,
+                child: const Text("Choose", style: TextStyle(color: Colors.white70, fontSize: 12)),
+              ),
+            ),
+            const Text(
+              "Choose name",
+              style: TextStyle(color: Colors.white70, fontSize: 18),
+            ),
+            const SizedBox(height: 7.5),
             TextField(
-                onChanged: (value) => setState(() {
-                      name = value;
-                    }),
+                maxLength: 15,
+                onChanged: (value) => setState(() => name = value),
                 cursorColor: Colors.white,
-                style: const TextStyle(fontSize: 20, color: Colors.white),
+                style: const TextStyle(fontSize: 18, color: Colors.white),
                 decoration: const InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  filled: true,
+                  fillColor: Color(0xFF181818),
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(width: 0), borderRadius: BorderRadius.all(Radius.circular(10))),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(width: 0), borderRadius: BorderRadius.all(Radius.circular(10))),
                 )),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             const Text(
-              "Choose an icon:",
-              style: TextStyle(color: Colors.white70, fontSize: 22),
+              "Scan QR code",
+              style: TextStyle(color: Colors.white70, fontSize: 18),
             ),
-            const SizedBox(height: 20),
-            icon == null
-                ? TextButton(
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    onPressed: _pickIcon,
-                    child: const Text("Choose...", style: TextStyle(fontSize: 20, color: Colors.white)),
-                  )
-                : SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: IconButton(
-                      icon: Icon(icon, size: 50, color: Colors.white),
-                      onPressed: _pickIcon,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ),
-            const SizedBox(height: 20),
-            const Text(
-              "Scan QR code:",
-              style: TextStyle(color: Colors.white70, fontSize: 22),
-            ),
-            TextButton(
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: () => _turnOnCamera(),
-              child: Text(camStatus, style: const TextStyle(fontSize: 20, color: Colors.white)),
-            ),
+            const SizedBox(height: 7.5),
+            if (!camera)
+              TextButton(
+                style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all(const Size.fromHeight(40)),
+                    padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10, vertical: 15)),
+                    backgroundColor: MaterialStateProperty.all(const Color(0xFF181818)),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    )),
+                onPressed: () => _turnOnCamera(),
+                child: Text(camStatus, style: const TextStyle(fontSize: 18, color: Colors.white)),
+              ),
             if (camera)
-              SizedBox(
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
                 height: 400,
                 width: 400,
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
-                ),
+                child: QRView(key: qrKey, onQRViewCreated: _onQRViewCreated),
               )
           ],
         ),
