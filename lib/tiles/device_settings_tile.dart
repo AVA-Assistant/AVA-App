@@ -3,9 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class DeviceSettings extends StatelessWidget {
   final Map device;
-  final bool reorder;
 
-  const DeviceSettings({super.key, required this.device, required this.reorder});
+  const DeviceSettings({super.key, required this.device});
 
   @override
   Widget build(BuildContext context) {

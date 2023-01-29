@@ -14,8 +14,6 @@ class DevicesScreen extends StatefulWidget {
 }
 
 class _DevicesScreenState extends State<DevicesScreen> {
-  bool reorder = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +67,28 @@ class _DevicesScreenState extends State<DevicesScreen> {
                 ),
                 children: [
                   SlidableAction(
-                    onPressed: (context) {},
+                    onPressed: (context) async {
+                      Map? newDevice = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddDevice(
+                            icon: widget.devices[index]["icon"],
+                            name: widget.devices[index]["name"],
+                            mqtt: {
+                              "type": widget.devices[index]["type"],
+                              "id": widget.devices[index]["id"],
+                              "mqtt_Id": widget.devices[index]["mqtt_id"],
+                            },
+                          ),
+                        ),
+                      );
+                      setState(() {
+                        if (newDevice != null) {
+                          widget.devices.removeAt(index);
+                          widget.devices.insert(index, newDevice);
+                        }
+                      });
+                    },
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
                     icon: Icons.edit,
@@ -86,7 +105,6 @@ class _DevicesScreenState extends State<DevicesScreen> {
               ),
               child: DeviceSettings(
                 device: widget.devices[index],
-                reorder: reorder,
               ),
             ),
           ),

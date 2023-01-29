@@ -50,7 +50,7 @@ class Device extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width: 15,
+              width: 12,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

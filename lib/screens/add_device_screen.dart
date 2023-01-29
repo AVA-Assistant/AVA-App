@@ -5,10 +5,13 @@ import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class AddDevice extends StatefulWidget {
-  const AddDevice({super.key});
+  final IconData? icon;
+  final String? name;
+  final Map? mqtt;
+  const AddDevice({super.key, this.icon, this.name, this.mqtt});
 
   @override
-  State<AddDevice> createState() => _AddDeviceState();
+  State<AddDevice> createState() => _AddDeviceState(icon, name, mqtt);
 }
 
 class _AddDeviceState extends State<AddDevice> {
@@ -18,8 +21,10 @@ class _AddDeviceState extends State<AddDevice> {
 
   bool camera = false;
   IconData? icon;
-  String name = "";
+  String? name;
   Map? mqtt;
+
+  _AddDeviceState(this.icon, this.name, this.mqtt);
 
   _pickIcon() async {
     IconData? tempIcon = await FlutterIconPicker.showIconPicker(
@@ -43,7 +48,7 @@ class _AddDeviceState extends State<AddDevice> {
   }
 
   _passDataBack() {
-    if (icon != null && name != "" && mqtt != null) {
+    if (icon != null && name != "" && name != null && mqtt != null) {
       mqtt!["icon"] = icon;
       mqtt!["name"] = name;
 
@@ -116,8 +121,9 @@ class _AddDeviceState extends State<AddDevice> {
               style: TextStyle(color: Colors.white70, fontSize: 18),
             ),
             const SizedBox(height: 7.5),
-            TextField(
-                maxLength: 15,
+            TextFormField(
+                initialValue: name,
+                maxLength: 12,
                 onChanged: (value) => setState(() => name = value),
                 cursorColor: Colors.white,
                 style: const TextStyle(fontSize: 18, color: Colors.white),
@@ -144,7 +150,7 @@ class _AddDeviceState extends State<AddDevice> {
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     )),
                 onPressed: () => _turnOnCamera(),
-                child: Text(camStatus, style: const TextStyle(fontSize: 18, color: Colors.white)),
+                child: Text(mqtt == null ? camStatus : "Scan again...", style: const TextStyle(fontSize: 18, color: Colors.white)),
               ),
             if (camera)
               Container(
