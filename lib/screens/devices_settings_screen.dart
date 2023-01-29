@@ -2,7 +2,7 @@ import 'package:ava_app/screens/add_device_screen.dart';
 import 'package:ava_app/tiles/device_settings_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:reorderable_grid_view/reorderable_grid_view.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class DevicesScreen extends StatefulWidget {
   final List devices;
@@ -14,6 +14,8 @@ class DevicesScreen extends StatefulWidget {
 }
 
 class _DevicesScreenState extends State<DevicesScreen> {
+  bool reorder = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,37 +53,53 @@ class _DevicesScreenState extends State<DevicesScreen> {
         ),
         middle: const Text("Devices", style: TextStyle(color: Colors.white, fontSize: 22)),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-          child: ReorderableGridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (_, index) => Dismissible(
-              onDismissed: (direction) => setState(() {
-                widget.devices.removeAt(index);
-              }),
-              key: ValueKey(index),
-              direction: DismissDirection.up,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ReorderableListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (_, index) => Padding(
+            key: Key(index.toString()),
+            padding: const EdgeInsets.only(top: 15),
+            child: Slidable(
+              closeOnScroll: true,
+              endActionPane: ActionPane(
+                motion: const DrawerMotion(),
+                dismissible: DismissiblePane(
+                  onDismissed: () => setState(() => widget.devices.removeAt(index)),
+                ),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {},
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    icon: Icons.edit,
+                    label: 'Edit',
+                  ),
+                  SlidableAction(
+                    onPressed: (context) => setState(() => widget.devices.removeAt(index)),
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
+                ],
+              ),
               child: DeviceSettings(
                 device: widget.devices[index],
-                key: ValueKey(index),
+                reorder: reorder,
               ),
             ),
-            itemCount: widget.devices.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 9 / 4,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
-            ),
-            onReorder: (oldIndex, newIndex) {
-              setState(() {
-                final item = widget.devices.removeAt(oldIndex);
-                widget.devices.insert(newIndex, item);
-              });
-            },
           ),
+          itemCount: widget.devices.length,
+          onReorder: (int oldIndex, int newIndex) {
+            setState(() {
+              if (oldIndex < newIndex) {
+                newIndex -= 1;
+              }
+              final item = widget.devices.removeAt(oldIndex);
+              widget.devices.insert(newIndex, item);
+            });
+          },
         ),
       ),
     );
