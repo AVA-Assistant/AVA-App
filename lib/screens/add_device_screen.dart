@@ -164,7 +164,7 @@ class _AddDeviceState extends State<AddDevice> {
           ],
         ),
       ),
-      backgroundColor: const Color(0xFF222222),
+      backgroundColor: const Color(0xFF1E1E1E),
     );
   }
 

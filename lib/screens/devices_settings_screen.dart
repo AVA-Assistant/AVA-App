@@ -38,7 +38,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
           });
         },
       ),
-      backgroundColor: const Color(0xFF222222),
+      backgroundColor: const Color(0xFF1E1E1E),
       appBar: CupertinoNavigationBar(
         backgroundColor: Colors.transparent,
         leading: TextButton(

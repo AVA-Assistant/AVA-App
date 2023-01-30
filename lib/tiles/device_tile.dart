@@ -1,3 +1,5 @@
+import 'package:ava_app/screens/device_controls/brightness_device.dart';
+import 'package:ava_app/screens/device_controls/unknown_device.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +17,14 @@ class Device extends StatelessWidget {
     required this.index,
   });
 
+  _setTypeOfTile() {
+    // if (device["type"] == "brth") {
+    return BrigtnessDevice(device: device);
+    // } else {
+    //   return UnknownDevice(device: device);
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -25,6 +35,13 @@ class Device extends StatelessWidget {
           callback("off", index);
         }
       },
+      onLongPress: () => showBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+        ),
+        builder: (context) => _setTypeOfTile(),
+      ),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
@@ -38,15 +55,8 @@ class Device extends StatelessWidget {
               child: Container(
                 height: 38,
                 width: 38,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                  color: Color(0xCC141414),
-                ),
-                child: Icon(
-                  device["icon"],
-                  size: 28,
-                  color: Colors.white,
-                ),
+                decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(50)), color: Color(0xCC141414)),
+                child: Icon(device["icon"], size: 28, color: Colors.white),
               ),
             ),
             const SizedBox(
