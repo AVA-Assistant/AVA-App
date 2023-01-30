@@ -1,4 +1,4 @@
-import 'package:ava_app/screens/device_controls/brightness_device.dart';
+import 'package:ava_app/screens/device_controls/brightness_control.dart';
 import 'package:ava_app/screens/device_controls/unknown_device.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
