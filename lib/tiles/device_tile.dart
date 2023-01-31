@@ -18,7 +18,7 @@ class Device extends StatelessWidget {
   });
 
   _setTypeOfTile() {
-    if (device["type"] == "brth") {
+    if (device["type"] == "brht") {
       return BrigtnessDevice(device: device);
     } else {
       return UnknownDevice(device: device);

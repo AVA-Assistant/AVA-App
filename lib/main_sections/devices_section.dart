@@ -1,6 +1,8 @@
 import 'package:ava_app/screens/devices_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../tiles/device_tile.dart';
 
@@ -17,24 +19,34 @@ class Devices extends StatefulWidget {
 }
 
 class _DevicesState extends State<Devices> {
-  List devices = [
-    {
-      'id': "dev_0",
-      'name': "Main lights",
-      'mqtt_Id': "lights_1",
-      'icon': Icons.lightbulb,
-      'type': 'on_off',
-      'state': null,
-    },
-    {
-      'id': "dev_1",
-      'name': "Main leds",
-      'mqtt_Id': "lights_1",
-      'icon': Icons.light_mode_rounded,
-      'type': 'on_off',
-      'state': "auto",
-    }
+  late Box appBox;
+  List? devices = [
+    // {
+    //   'id': "dev_0",
+    //   'name': "Main lights",
+    //   'mqtt_Id': "lights_1",
+    //   'icon': Icons.lightbulb,
+    //   'type': 'on_off',
+    //   'state': null,
+    // },
+    // {
+    //   'id': "dev_1",
+    //   'name': "Main leds",
+    //   'mqtt_Id': "lights_1",
+    //   'icon': Icons.light_mode_rounded,
+    //   'type': 'on_off',
+    //   'state': "auto",
+    // }
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    appBox = Hive.box('appBox');
+
+    setState(() => devices = appBox.get("devices"));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +66,16 @@ class _DevicesState extends State<Devices> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => DevicesScreen(
-                      devices: devices,
+                      devices: devices!,
                     ),
                   ),
                 );
+
                 setState(() {
                   if (newDevices != null) devices = newDevices;
                 });
+
+                appBox.put("devices", devices);
               },
               child: IntrinsicWidth(
                 child: Row(
@@ -89,12 +104,12 @@ class _DevicesState extends State<Devices> {
           GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: devices.length,
+            itemCount: devices!.length,
             itemBuilder: (_, index) {
               return Device(
-                device: devices[index],
+                device: devices![index],
                 index: index,
-                callback: (val, index) => setState(() => devices[index]["state"] = val),
+                callback: (val, index) => setState(() => devices![index]["state"] = val),
               );
             },
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
