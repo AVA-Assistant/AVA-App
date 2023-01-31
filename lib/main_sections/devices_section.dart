@@ -20,24 +20,7 @@ class Devices extends StatefulWidget {
 
 class _DevicesState extends State<Devices> {
   late Box appBox;
-  List? devices = [
-    // {
-    //   'id': "dev_0",
-    //   'name': "Main lights",
-    //   'mqtt_Id': "lights_1",
-    //   'icon': Icons.lightbulb,
-    //   'type': 'on_off',
-    //   'state': null,
-    // },
-    // {
-    //   'id': "dev_1",
-    //   'name': "Main leds",
-    //   'mqtt_Id': "lights_1",
-    //   'icon': Icons.light_mode_rounded,
-    //   'type': 'on_off',
-    //   'state': "auto",
-    // }
-  ];
+  List? devices = [];
 
   @override
   void initState() {
@@ -101,24 +84,25 @@ class _DevicesState extends State<Devices> {
           ),
           const SizedBox(height: 15),
           // const Device(),
-          GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: devices!.length,
-            itemBuilder: (_, index) {
-              return Device(
-                device: devices![index],
-                index: index,
-                callback: (val, index) => setState(() => devices![index]["state"] = val),
-              );
-            },
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 9 / 4,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 20,
-            ),
-          )
+          if (devices != null)
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: devices!.length,
+              itemBuilder: (_, index) {
+                return Device(
+                  device: devices![index],
+                  index: index,
+                  callback: (val, index) => setState(() => devices![index]["state"] = val),
+                );
+              },
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 9 / 4,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 20,
+              ),
+            )
         ],
       ),
     );

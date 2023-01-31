@@ -6,26 +6,7 @@ import 'package:flutter/services.dart';
 late Box appBox;
 Future<void> main() async {
   await Hive.initFlutter();
-  var appBox = await Hive.openBox('appBox');
-
-  // appBox.put("devices", [
-  //   {
-  //     'id': "dev_0",
-  //     'name': "Main lights",
-  //     'mqtt_Id': "lights_1",
-  //     // 'icon': Icons.lightbulb,
-  //     'type': 'on_off',
-  //     'state': null,
-  //   },
-  //   {
-  //     'id': "dev_1",
-  //     'name': "Main leds",
-  //     'mqtt_Id': "lights_1",
-  //     // 'icon': Icons.light_mode_rounded,
-  //     'type': 'on_off',
-  //     'state': "auto",
-  //   }
-  // ]);
+  await Hive.openBox('appBox');
 
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([

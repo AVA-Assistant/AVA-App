@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,7 +28,7 @@ class DeviceSettings extends StatelessWidget {
               ),
               child: Center(
                 child: Icon(
-                  device["icon"],
+                  IconData(device["icon"], fontFamily: CupertinoIcons.iconFont, fontPackage: CupertinoIcons.iconFontPackage),
                   size: 30,
                   color: Colors.white,
                 ),

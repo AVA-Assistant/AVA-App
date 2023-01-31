@@ -60,6 +60,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
             padding: const EdgeInsets.only(top: 15),
             child: Slidable(
               closeOnScroll: true,
+              key: ValueKey(index),
               endActionPane: ActionPane(
                 motion: const DrawerMotion(),
                 dismissible: DismissiblePane(
