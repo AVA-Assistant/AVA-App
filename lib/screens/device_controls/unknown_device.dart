@@ -23,17 +23,17 @@ class UnknownDevice extends StatelessWidget {
           children: [
             Text(
               device["name"],
-              style: GoogleFonts.heebo(fontSize: 40, fontWeight: FontWeight.bold),
+              style: GoogleFonts.heebo(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white60),
             ),
             const SizedBox(height: 200),
             Text(
               "Unknown device type!",
-              style: GoogleFonts.heebo(fontSize: 35, fontWeight: FontWeight.w900),
+              style: GoogleFonts.heebo(fontSize: 32, fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 10),
             Text(
               "Scann QR code again.",
-              style: GoogleFonts.heebo(fontSize: 26, fontWeight: FontWeight.w900),
+              style: GoogleFonts.heebo(fontSize: 22, fontWeight: FontWeight.w900),
             ),
           ],
         ),

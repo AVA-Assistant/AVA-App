@@ -5,7 +5,7 @@ import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class AddDevice extends StatefulWidget {
-  final IconData? icon;
+  final int? icon;
   final String? name;
   final Map? mqtt;
   const AddDevice({super.key, this.icon, this.name, this.mqtt});
@@ -20,7 +20,7 @@ class _AddDeviceState extends State<AddDevice> {
   String camStatus = "Scan...";
 
   bool camera = false;
-  IconData? icon;
+  int? icon;
   String? name;
   Map? mqtt;
 
@@ -34,7 +34,7 @@ class _AddDeviceState extends State<AddDevice> {
       iconColor: Colors.white,
     );
     setState(() {
-      icon = tempIcon;
+      icon = tempIcon!.codePoint;
     });
   }
 
@@ -48,7 +48,7 @@ class _AddDeviceState extends State<AddDevice> {
   }
 
   _passDataBack() {
-    if (icon != null && name != "" && name != null && mqtt != null) {
+    if (icon != null && name != "" && name != null) {
       mqtt!["icon"] = icon;
       mqtt!["name"] = name;
 
@@ -74,7 +74,7 @@ class _AddDeviceState extends State<AddDevice> {
           style: TextStyle(color: Colors.white, fontSize: 22),
         ),
       ),
-      floatingActionButton: icon != null && name != "" && mqtt != null
+      floatingActionButton: icon != null && name != ""
           ? FloatingActionButton(
               elevation: 5,
               backgroundColor: const Color(0xDFFFFFFF),
@@ -103,7 +103,11 @@ class _AddDeviceState extends State<AddDevice> {
                 height: 125,
                 width: 125,
                 child: IconButton(
-                  icon: Icon(icon ?? Icons.question_mark, size: 75, color: Colors.white),
+                  icon: Icon(
+                    icon != null ? IconData(icon!, fontFamily: CupertinoIcons.iconFont, fontPackage: CupertinoIcons.iconFontPackage) : Icons.question_mark,
+                    size: 75,
+                    color: Colors.white,
+                  ),
                   onPressed: _pickIcon,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),

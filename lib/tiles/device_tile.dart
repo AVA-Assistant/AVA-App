@@ -56,13 +56,13 @@ class Device extends StatelessWidget {
           child: Row(children: [
             Center(
               child: Container(
-                height: 38,
-                width: 38,
+                height: 40,
+                width: 40,
                 decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(50)), color: Color(0xCC141414)),
                 child: Center(
                   child: Icon(
                     IconData(device["icon"], fontFamily: CupertinoIcons.iconFont, fontPackage: CupertinoIcons.iconFontPackage),
-                    size: 28,
+                    size: 25,
                     color: Colors.white,
                   ),
                 ),

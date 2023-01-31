@@ -37,9 +37,28 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              widget.device["name"],
-              style: GoogleFonts.heebo(fontSize: 40, fontWeight: FontWeight.bold),
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: Text(
+                    widget.device["name"],
+                    style: GoogleFonts.heebo(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  "Set brightness",
+                  style: GoogleFonts.heebo(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[400],
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 350,
