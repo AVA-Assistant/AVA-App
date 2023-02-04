@@ -34,13 +34,16 @@ class _DevicesState extends State<Devices> {
 
     appBox = Hive.box('appBox');
     var newDevices = appBox.get("devices");
-    for (var tempDevice in newDevices) {
-      tempDevice["status"] = null;
-    }
-    setState(() => devices = newDevices);
 
-    socket.emit("setup", [appBox.get("devices")]);
-    socket.on("setup", (data) => setState(() => devices = data));
+    if (newDevices != null) {
+      for (var tempDevice in newDevices) {
+        tempDevice["status"] = null;
+      }
+      setState(() => devices = newDevices);
+
+      socket.emit("setup", [appBox.get("devices")]);
+      socket.on("setup", (data) => setState(() => devices = data));
+    }
   }
 
   @override
@@ -104,8 +107,8 @@ class _DevicesState extends State<Devices> {
               itemBuilder: (_, index) {
                 return Device(
                   device: devices![index],
-                  index: index,
-                  callback: (val, index) => setState(() => devices![index]["status"] = val),
+                  statusCallback: (val) => setState(() => devices![index]["status"] = val),
+                  stateCallback: (val) => setState(() => devices![index]["state"] = val),
                 );
               },
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -114,7 +117,7 @@ class _DevicesState extends State<Devices> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 20,
               ),
-            )
+            ),
         ],
       ),
     );

@@ -2,22 +2,50 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+typedef DeviceCallback = void Function(dynamic val);
+
 class BrigtnessDevice extends StatefulWidget {
   final Map device;
-  const BrigtnessDevice({super.key, required this.device});
+  final DeviceCallback statusCallback;
+  final DeviceCallback stateCallback;
+
+  const BrigtnessDevice({
+    super.key,
+    required this.device,
+    required this.statusCallback,
+    required this.stateCallback,
+  });
 
   @override
   State<BrigtnessDevice> createState() => _BrigtnessDeviceState();
 }
 
 class _BrigtnessDeviceState extends State<BrigtnessDevice> {
-  double value = 0;
-  bool slider = true;
+  double sliderValue = 0;
+  bool sliderState = false;
   final double min = 0;
   final double max = 255;
 
-  void state(double state) {
-    setState(() => value = state);
+  void setSliderState(bool state) {
+    setState(() => sliderState = state);
+    widget.statusCallback(state ? "${sliderValue.roundToDouble()}%" : "Off");
+    widget.stateCallback({'status': state, 'value': sliderValue});
+  }
+
+  void setSliderValue(double state) {
+    setState(() => sliderValue = state);
+
+    widget.statusCallback('${state.roundToDouble()}%');
+    widget.stateCallback({'status': sliderState, 'value': state.roundToDouble()});
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      sliderValue = widget.device["state"]['value'] + 0.0;
+      sliderState = widget.device["state"]['status'];
+    });
+    super.initState();
   }
 
   @override
@@ -73,13 +101,13 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
                 child: RotatedBox(
                   quarterTurns: 3,
                   child: Slider(
-                    value: value,
+                    value: sliderValue,
                     min: 0,
                     max: 100,
-                    activeColor: slider ? Colors.white : Colors.grey[600],
+                    activeColor: sliderState ? Colors.white : Colors.grey[600],
                     inactiveColor: Colors.grey[800],
-                    label: value.round().toString(),
-                    onChanged: (value) => slider ? state(value) : null,
+                    label: sliderValue.round().toString(),
+                    onChanged: (value) => sliderState ? setSliderValue(value) : null,
                   ),
                 ),
               ),
@@ -88,26 +116,26 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
               padding: const EdgeInsets.all(7),
               thumbColor: Colors.white,
               children: {
-                "on": TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-                  ),
+                "on": Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   child: Text(
                     "On",
-                    style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: !slider ? Colors.white : const Color(0xff1e1e1e)),
+                    style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: !sliderState ? Colors.white : const Color(0xff1e1e1e)),
                   ),
-                  onPressed: () => setState(() => slider = true),
                 ),
-                "off": TextButton(
+                "off": Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
                   child: Text(
                     "Off",
-                    style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: slider ? Colors.white : const Color(0xff1e1e1e)),
+                    style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: sliderState ? Colors.white : const Color(0xff1e1e1e)),
                   ),
-                  onPressed: () => setState(() => slider = false),
                 ),
               },
-              groupValue: !slider ? "off" : "on",
-              onValueChanged: (value) {},
+              groupValue: !sliderState ? "off" : "on",
+              onValueChanged: (value) {
+                setState(() => sliderState = value == "on" ? true : false);
+                setSliderState(value == "on" ? true : false);
+              },
             )
           ],
         ),
