@@ -30,13 +30,13 @@ class Device extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (device["state"] == "off" && device["state"] != null) {
-          callback("auto", index);
-        } else if (device["state"] != null) {
-          callback("off", index);
+        if (device["status"] == "Off" && device["status"] != null) {
+          callback("On", index);
+        } else if (device["status"] != null) {
+          callback("Off", index);
         }
       },
-      onLongPress: () => device["state"] != null
+      onLongPress: () => device["status"] != null
           ? showBottomSheet(
               context: context,
               shape: const RoundedRectangleBorder(
@@ -49,7 +49,7 @@ class Device extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(15)),
-          color: device["state"] == "off" || device["state"] == null ? const Color(0x99141414) : const Color(0xB1FFFFFF),
+          color: device["status"] == "Off" || device["status"] == null ? const Color(0x99141414) : const Color(0xB1FFFFFF),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -78,16 +78,16 @@ class Device extends StatelessWidget {
                 Text(
                   device["name"],
                   style: GoogleFonts.heebo(
-                    color: device["state"] == "off" || device["state"] == null ? const Color(0xFFFFFFFF) : const Color(0xff333333),
+                    color: device["status"] == "Off" || device["status"] == null ? const Color(0xFFFFFFFF) : const Color(0xff333333),
                     fontSize: 16,
                     height: 1.2,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
-                  device["state"] == null ? "Loading..." : device["state"].toString(),
+                  device["status"] == null ? "Loading..." : device["status"].toString(),
                   style: GoogleFonts.heebo(
-                    color: device["state"] == "off" || device["state"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
+                    color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
                     fontSize: 14,
                     height: 1.2,
                     fontWeight: FontWeight.w400,

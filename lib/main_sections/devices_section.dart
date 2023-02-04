@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
+import 'package:socket_io_client/socket_io_client.dart';
 import '../tiles/device_tile.dart';
 
 class Devices extends StatefulWidget {
@@ -21,14 +21,26 @@ class Devices extends StatefulWidget {
 class _DevicesState extends State<Devices> {
   late Box appBox;
   List? devices = [];
+  late Socket socket;
 
   @override
   void initState() {
     super.initState();
 
-    appBox = Hive.box('appBox');
+    socket = io("http://192.168.1.191:2500", <String, dynamic>{
+      'force new connection': true,
+      "transports": ['websocket']
+    });
 
-    setState(() => devices = appBox.get("devices"));
+    appBox = Hive.box('appBox');
+    var newDevices = appBox.get("devices");
+    for (var tempDevice in newDevices) {
+      tempDevice["status"] = null;
+    }
+    setState(() => devices = newDevices);
+
+    socket.emit("setup", [appBox.get("devices")]);
+    socket.on("setup", (data) => setState(() => devices = data));
   }
 
   @override
@@ -93,7 +105,7 @@ class _DevicesState extends State<Devices> {
                 return Device(
                   device: devices![index],
                   index: index,
-                  callback: (val, index) => setState(() => devices![index]["state"] = val),
+                  callback: (val, index) => setState(() => devices![index]["status"] = val),
                 );
               },
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
