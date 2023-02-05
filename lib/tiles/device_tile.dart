@@ -1,4 +1,5 @@
 import 'package:ava_app/screens/device_controls/brightness_control.dart';
+import 'package:ava_app/screens/device_controls/onOff_control.dart';
 import 'package:ava_app/screens/device_controls/unknown_device.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,12 @@ class Device extends StatelessWidget {
   _setTypeOfTile() {
     if (device["type"] == "brht") {
       return BrigtnessDevice(
+        device: device,
+        stateCallback: stateCallback,
+        statusCallback: statusCallback,
+      );
+    } else if (device["type"] == "onf") {
+      return OnOffDevice(
         device: device,
         stateCallback: stateCallback,
         statusCallback: statusCallback,

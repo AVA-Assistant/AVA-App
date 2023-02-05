@@ -42,7 +42,7 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   @override
   void initState() {
     setState(() {
-      sliderValue = widget.device["state"]['value'] + 0.0;
+      sliderValue = widget.device["state"]['value'];
       sliderState = widget.device["state"]['status'];
     });
     super.initState();

@@ -46,6 +46,17 @@ class _DevicesState extends State<Devices> {
     }
   }
 
+  void setStats(val, index) {
+    setState(() => devices![index]["state"] = val);
+    var device = devices![index];
+    // print({
+    //   "type": device['type'],
+    //   "id": device['id'],
+    //   "mqtt_Id": device['mqtt_Id'],
+    //   'state': val,
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -108,7 +119,7 @@ class _DevicesState extends State<Devices> {
                 return Device(
                   device: devices![index],
                   statusCallback: (val) => setState(() => devices![index]["status"] = val),
-                  stateCallback: (val) => setState(() => devices![index]["state"] = val),
+                  stateCallback: (val) => setStats(val, index),
                 );
               },
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
