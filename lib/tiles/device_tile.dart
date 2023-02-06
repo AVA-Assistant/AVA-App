@@ -100,7 +100,7 @@ class Device extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  device["status"] == null ? "Loading..." : device["status"].toString(),
+                  device["status"] ?? "Loading...",
                   style: GoogleFonts.heebo(
                     color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
                     fontSize: 14,

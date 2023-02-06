@@ -111,7 +111,7 @@ class _OnOffDeviceState extends State<OnOffDevice> {
                 },
               ),
             ),
-            SizedBox()
+            const SizedBox()
           ],
         ),
       ),

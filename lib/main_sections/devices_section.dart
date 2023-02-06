@@ -27,7 +27,7 @@ class _DevicesState extends State<Devices> {
   void initState() {
     super.initState();
 
-    socket = io("http://192.168.1.191:2500", <String, dynamic>{
+    socket = io("http://10.10.5.233:2500", <String, dynamic>{
       'force new connection': true,
       "transports": ['websocket']
     });
@@ -44,17 +44,26 @@ class _DevicesState extends State<Devices> {
       socket.emit("setup", [appBox.get("devices")]);
       socket.on("setup", (data) => setState(() => devices = data));
     }
+
+    socket.on("stateChanged", (data) {
+      var updatedDevice = devices!.where((dev) => dev["mqtt_Id"] == data["mqtt_Id"]).first;
+      setState(() {
+        updatedDevice['state'] = data['state'];
+        updatedDevice['status'] = data['status'];
+      });
+    });
   }
 
   void setStats(val, index) {
     setState(() => devices![index]["state"] = val);
     var device = devices![index];
-    // print({
-    //   "type": device['type'],
-    //   "id": device['id'],
-    //   "mqtt_Id": device['mqtt_Id'],
-    //   'state': val,
-    // });
+    socket.emit("changeState", {
+      "type": device['type'],
+      "mqtt_Id": device['mqtt_Id'],
+      'state': val,
+      'status': device['status'],
+      "emit": true,
+    });
   }
 
   @override
