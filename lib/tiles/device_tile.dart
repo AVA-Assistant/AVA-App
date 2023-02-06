@@ -5,12 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-typedef DeviceCallback = void Function(dynamic val);
+typedef StatusCallbackType = void Function(dynamic val);
+typedef StateCallbackType = void Function(dynamic val, bool emit);
 
 class Device extends StatelessWidget {
   final Map device;
-  final DeviceCallback statusCallback;
-  final DeviceCallback stateCallback;
+  final StatusCallbackType statusCallback;
+  final StateCallbackType stateCallback;
 
   const Device({
     super.key,
@@ -44,11 +45,11 @@ class Device extends StatelessWidget {
         if (device["status"] == "Off" && device["status"] != null) {
           statusCallback("On");
           device['state']['status'] = true;
-          stateCallback(device['state']);
+          stateCallback(device['state'], true);
         } else if (device["status"] != null) {
           statusCallback("Off");
           device['state']['status'] = false;
-          stateCallback(device['state']);
+          stateCallback(device['state'], true);
         }
       },
       onLongPress: () => device["status"] != null

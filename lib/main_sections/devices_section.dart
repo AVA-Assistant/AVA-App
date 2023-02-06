@@ -54,7 +54,7 @@ class _DevicesState extends State<Devices> {
     });
   }
 
-  void setStats(val, index) {
+  void setStats(val, index, emit) {
     setState(() => devices![index]["state"] = val);
     var device = devices![index];
     socket.emit("changeState", {
@@ -62,7 +62,7 @@ class _DevicesState extends State<Devices> {
       "mqtt_Id": device['mqtt_Id'],
       'state': val,
       'status': device['status'],
-      "emit": true,
+      "emit": emit,
     });
   }
 
@@ -128,7 +128,7 @@ class _DevicesState extends State<Devices> {
                 return Device(
                   device: devices![index],
                   statusCallback: (val) => setState(() => devices![index]["status"] = val),
-                  stateCallback: (val) => setStats(val, index),
+                  stateCallback: (val, emit) => setStats(val, index, emit),
                 );
               },
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-typedef DeviceCallback = void Function(dynamic val);
+typedef StatusCallbackType = void Function(dynamic val);
+typedef StateCallbackType = void Function(dynamic val, bool emit);
 
 class OnOffDevice extends StatefulWidget {
   final Map device;
-  final DeviceCallback statusCallback;
-  final DeviceCallback stateCallback;
+  final StatusCallbackType statusCallback;
+  final StateCallbackType stateCallback;
 
   const OnOffDevice({
     super.key,
@@ -26,7 +27,7 @@ class _OnOffDeviceState extends State<OnOffDevice> {
   void setDeviceState(bool state) {
     setState(() => sliderState = state);
     widget.statusCallback(state ? "On" : "Off");
-    widget.stateCallback({'status': state});
+    widget.stateCallback({'status': state}, true);
   }
 
   @override

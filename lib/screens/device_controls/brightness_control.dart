@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-typedef DeviceCallback = void Function(dynamic val);
+typedef StatusCallbackType = void Function(dynamic val);
+typedef StateCallbackType = void Function(dynamic val, bool emit);
 
 class BrigtnessDevice extends StatefulWidget {
   final Map device;
-  final DeviceCallback statusCallback;
-  final DeviceCallback stateCallback;
+  final StatusCallbackType statusCallback;
+  final StateCallbackType stateCallback;
 
   const BrigtnessDevice({
     super.key,
@@ -29,14 +30,14 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   void setSliderState(bool state) {
     setState(() => sliderState = state);
     widget.statusCallback(state ? "${sliderValue.roundToDouble()}%" : "Off");
-    widget.stateCallback({'status': state, 'value': sliderValue});
+    widget.stateCallback({'status': state, 'value': sliderValue}, true);
   }
 
-  void setSliderValue(double state) {
+  void setSliderValue(double state, bool emit) {
     setState(() => sliderValue = state);
 
     widget.statusCallback('${state.roundToDouble()}%');
-    widget.stateCallback({'status': sliderState, 'value': state.roundToDouble()});
+    widget.stateCallback({'status': sliderState, 'value': state.roundToDouble()}, emit);
   }
 
   @override
@@ -107,7 +108,8 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
                     activeColor: sliderState ? Colors.white : Colors.grey[600],
                     inactiveColor: Colors.grey[800],
                     label: sliderValue.round().toString(),
-                    onChanged: (value) => sliderState ? setSliderValue(value) : null,
+                    onChanged: (value) => sliderState ? setSliderValue(value, false) : null,
+                    onChangeEnd: (value) => sliderState ? setSliderValue(value, true) : null,
                   ),
                 ),
               ),
