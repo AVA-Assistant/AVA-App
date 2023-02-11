@@ -48,7 +48,7 @@ class _AddDeviceState extends State<AddDevice> {
   }
 
   _passDataBack() {
-    if (icon != null && name != "" && name != null) {
+    if (icon != null && name != "" && name != null && mqtt != null) {
       mqtt!["icon"] = icon;
       mqtt!["name"] = name;
 
