@@ -1,3 +1,4 @@
+import 'package:ava_app/initSocket.dart';
 import 'package:ava_app/screens/devices_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,16 +22,12 @@ class Devices extends StatefulWidget {
 class _DevicesState extends State<Devices> {
   late Box appBox;
   List? devices = [];
-  late Socket socket;
 
   @override
   void initState() {
     super.initState();
 
-    socket = io("http://192.168.1.191:2500", <String, dynamic>{
-      'force new connection': true,
-      "transports": ['websocket']
-    });
+    socket = initSocket();
 
     socket.onConnect((data) => socket.emit("setup", [appBox.get("devices")]));
 

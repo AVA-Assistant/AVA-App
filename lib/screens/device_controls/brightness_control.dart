@@ -1,3 +1,4 @@
+import 'package:ava_app/initSocket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +28,6 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   bool sliderState = false;
   final double min = 0;
   final double max = 255;
-  late Socket socket;
 
   void setSliderState(bool state) {
     setState(() => sliderState = state);
@@ -49,10 +49,7 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
       sliderState = widget.device["state"]['status'];
     });
 
-    socket = io("http://192.168.1.191:2500", <String, dynamic>{
-      'force new connection': true,
-      "transports": ['websocket']
-    });
+    socket = initSocket();
 
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"]) {
