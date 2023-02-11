@@ -32,6 +32,8 @@ class _DevicesState extends State<Devices> {
       "transports": ['websocket']
     });
 
+    socket.onConnect((data) => socket.emit("setup", [appBox.get("devices")]));
+
     appBox = Hive.box('appBox');
     var newDevices = appBox.get("devices");
 
@@ -50,6 +52,14 @@ class _DevicesState extends State<Devices> {
       setState(() {
         updatedDevice['state'] = data['state'];
         updatedDevice['status'] = data['status'];
+      });
+    });
+
+    socket.onDisconnect((data) {
+      setState(() {
+        for (var tempDevice in devices!) {
+          tempDevice["status"] = null;
+        }
       });
     });
   }

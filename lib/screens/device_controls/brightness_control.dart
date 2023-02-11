@@ -62,6 +62,7 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
         });
       }
     });
+    socket.onDisconnect((data) => Navigator.pop(context));
 
     super.initState();
   }

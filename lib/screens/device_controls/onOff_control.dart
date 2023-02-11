@@ -43,6 +43,8 @@ class _OnOffDeviceState extends State<OnOffDevice> {
       "transports": ['websocket']
     });
 
+    socket.onDisconnect((data) => Navigator.pop(context));
+
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"]) {
         setState(() {
