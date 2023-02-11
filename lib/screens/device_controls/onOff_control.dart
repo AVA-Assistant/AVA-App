@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 typedef StatusCallbackType = void Function(dynamic val);
 typedef StateCallbackType = void Function(dynamic val, bool emit);
@@ -23,6 +24,7 @@ class OnOffDevice extends StatefulWidget {
 
 class _OnOffDeviceState extends State<OnOffDevice> {
   bool sliderState = false;
+  late Socket socket;
 
   void setDeviceState(bool state) {
     setState(() => sliderState = state);
@@ -34,6 +36,19 @@ class _OnOffDeviceState extends State<OnOffDevice> {
   void initState() {
     setState(() {
       sliderState = widget.device["state"]['status'];
+    });
+
+    socket = io("http://192.168.1.191:2500", <String, dynamic>{
+      'force new connection': true,
+      "transports": ['websocket']
+    });
+
+    socket.on("stateChanged", (data) {
+      if (data["mqtt_Id"] == widget.device["mqtt_Id"]) {
+        setState(() {
+          sliderState = data['state']['status'];
+        });
+      }
     });
     super.initState();
   }

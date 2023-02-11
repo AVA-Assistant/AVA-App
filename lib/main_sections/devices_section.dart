@@ -27,7 +27,7 @@ class _DevicesState extends State<Devices> {
   void initState() {
     super.initState();
 
-    socket = io("http://10.10.5.233:2500", <String, dynamic>{
+    socket = io("http://192.168.1.191:2500", <String, dynamic>{
       'force new connection': true,
       "transports": ['websocket']
     });

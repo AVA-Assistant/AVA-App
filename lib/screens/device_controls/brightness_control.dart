@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 typedef StatusCallbackType = void Function(dynamic val);
 typedef StateCallbackType = void Function(dynamic val, bool emit);
@@ -26,18 +27,19 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   bool sliderState = false;
   final double min = 0;
   final double max = 255;
+  late Socket socket;
 
   void setSliderState(bool state) {
     setState(() => sliderState = state);
-    widget.statusCallback(state ? "${sliderValue.roundToDouble()}%" : "Off");
+    widget.statusCallback(state ? "${sliderValue.toStringAsFixed(1)}%" : "Off");
     widget.stateCallback({'status': state, 'value': sliderValue}, true);
   }
 
   void setSliderValue(double state, bool emit) {
     setState(() => sliderValue = state);
 
-    widget.statusCallback('${state.roundToDouble()}%');
-    widget.stateCallback({'status': sliderState, 'value': state.roundToDouble()}, emit);
+    widget.statusCallback('${state.toStringAsFixed(1)}%');
+    widget.stateCallback({'status': sliderState, 'value': state}, emit);
   }
 
   @override
@@ -46,6 +48,21 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
       sliderValue = widget.device["state"]['value'];
       sliderState = widget.device["state"]['status'];
     });
+
+    socket = io("http://192.168.1.191:2500", <String, dynamic>{
+      'force new connection': true,
+      "transports": ['websocket']
+    });
+
+    socket.on("stateChanged", (data) {
+      if (data["mqtt_Id"] == widget.device["mqtt_Id"]) {
+        setState(() {
+          sliderValue = data['state']['value'];
+          sliderState = data['state']['status'];
+        });
+      }
+    });
+
     super.initState();
   }
 
@@ -107,7 +124,6 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
                     max: 100,
                     activeColor: sliderState ? Colors.white : Colors.grey[600],
                     inactiveColor: Colors.grey[800],
-                    label: sliderValue.round().toString(),
                     onChanged: (value) => sliderState ? setSliderValue(value, false) : null,
                     onChangeEnd: (value) => sliderState ? setSliderValue(value, true) : null,
                   ),
