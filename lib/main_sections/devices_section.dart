@@ -28,10 +28,10 @@ class _DevicesState extends State<Devices> {
     super.initState();
 
     socket = initSocket();
+    appBox = Hive.box('appBox');
 
     socket.onConnect((data) => socket.emit("setup", [appBox.get("devices")]));
 
-    appBox = Hive.box('appBox');
     var newDevices = appBox.get("devices");
 
     if (newDevices != null) {
@@ -40,14 +40,13 @@ class _DevicesState extends State<Devices> {
       }
       setState(() => devices = newDevices);
 
-      socket.emit("setup", [appBox.get("devices")]);
       socket.on("setup", (data) => setState(() => devices = data));
     }
 
     socket.on("stateChanged", (data) {
       var updatedDevice = devices!.where((dev) => dev["mqtt_Id"] == data["mqtt_Id"]).first;
       setState(() {
-        updatedDevice['state'] = data['state'];
+        updatedDevice['settings'] = data['settings'];
         updatedDevice['status'] = data['status'];
       });
     });
@@ -61,14 +60,16 @@ class _DevicesState extends State<Devices> {
     });
   }
 
-  void setStats(val, index, emit) {
-    setState(() => devices![index]["state"] = val);
+  void setStats(val, index, status, emit) {
+    setState(() => devices![index]["settings"] = val);
+    setState(() => devices![index]["status"] = status);
     var device = devices![index];
     socket.emit("changeState", {
+      'id': device['id'],
       "type": device['type'],
       "mqtt_Id": device['mqtt_Id'],
-      'state': val,
-      'status': device['status'],
+      'settings': val,
+      'status': status,
       "emit": emit,
     });
   }
@@ -129,12 +130,11 @@ class _DevicesState extends State<Devices> {
             GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: devices!.length,
+              itemCount: devices?.length,
               itemBuilder: (_, index) {
                 return Device(
                   device: devices![index],
-                  statusCallback: (val) => setState(() => devices![index]["status"] = val),
-                  stateCallback: (val, emit) => setStats(val, index, emit),
+                  deviceCallback: (val, status, emit) => setStats(val, index, status, emit),
                 );
               },
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

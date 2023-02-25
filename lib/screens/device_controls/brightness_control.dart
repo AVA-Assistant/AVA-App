@@ -4,19 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-typedef StatusCallbackType = void Function(dynamic val);
-typedef StateCallbackType = void Function(dynamic val, bool emit);
+typedef CallbackType = void Function(dynamic val, String status, bool emit);
 
 class BrigtnessDevice extends StatefulWidget {
   final Map device;
-  final StatusCallbackType statusCallback;
-  final StateCallbackType stateCallback;
+  final CallbackType deviceCallback;
 
   const BrigtnessDevice({
     super.key,
     required this.device,
-    required this.statusCallback,
-    required this.stateCallback,
+    required this.deviceCallback,
   });
 
   @override
@@ -31,33 +28,32 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
 
   void setSliderState(bool state) {
     setState(() => sliderState = state);
-    widget.statusCallback(state ? "${sliderValue.toStringAsFixed(1)}%" : "Off");
-    widget.stateCallback({'status': state, 'value': sliderValue}, true);
+
+    widget.deviceCallback({'status': state, 'value': sliderValue}, state ? "${sliderValue.toStringAsFixed(1)}%" : "Off", true);
   }
 
   void setSliderValue(double state, bool emit) {
     setState(() => sliderValue = state);
 
-    widget.statusCallback('${state.toStringAsFixed(1)}%');
-    widget.stateCallback({'status': sliderState, 'value': state}, emit);
+    widget.deviceCallback({'status': sliderState, 'value': state}, '${state.toStringAsFixed(1)}%', emit);
   }
 
   @override
   void initState() {
-    setState(() {
-      if (widget.device["state"] != null) {
-        sliderValue = widget.device["state"]['value'];
-        sliderState = widget.device["state"]['status'];
-      }
-    });
+    if (widget.device["settings"] != null) {
+      setState(() {
+        sliderValue = widget.device["settings"]['value'];
+        sliderState = widget.device["settings"]['status'];
+      });
+    }
 
     socket = initSocket();
 
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"]) {
         setState(() {
-          sliderValue = data['state']['value'];
-          sliderState = data['state']['status'];
+          sliderValue = data['settings']['value'];
+          sliderState = data['settings']['status'];
         });
       }
     });

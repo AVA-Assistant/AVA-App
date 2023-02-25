@@ -5,19 +5,16 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 import '../../initSocket.dart';
 
-typedef StatusCallbackType = void Function(dynamic val);
-typedef StateCallbackType = void Function(dynamic val, bool emit);
+typedef CallbackType = void Function(dynamic val, String status, bool emit);
 
 class OnOffDevice extends StatefulWidget {
   final Map device;
-  final StatusCallbackType statusCallback;
-  final StateCallbackType stateCallback;
+  final CallbackType deviceCallback;
 
   const OnOffDevice({
     super.key,
     required this.device,
-    required this.statusCallback,
-    required this.stateCallback,
+    required this.deviceCallback,
   });
 
   @override
@@ -29,15 +26,14 @@ class _OnOffDeviceState extends State<OnOffDevice> {
 
   void setDeviceState(bool state) {
     setState(() => sliderState = state);
-    widget.statusCallback(state ? "On" : "Off");
-    widget.stateCallback({'status': state}, true);
+    widget.deviceCallback({'status': state}, state ? "On" : "Off", true);
   }
 
   @override
   void initState() {
     setState(() {
-      if (widget.device["state"] != null) {
-        sliderState = widget.device["state"]['status'];
+      if (widget.device["settings"] != null) {
+        sliderState = widget.device["settings"]['status'];
       }
     });
 
@@ -48,7 +44,7 @@ class _OnOffDeviceState extends State<OnOffDevice> {
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"]) {
         setState(() {
-          sliderState = data['state']['status'];
+          sliderState = data['settings']['status'];
         });
       }
     });

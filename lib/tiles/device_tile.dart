@@ -5,33 +5,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-typedef StatusCallbackType = void Function(dynamic val);
-typedef StateCallbackType = void Function(dynamic val, bool emit);
+typedef CallbackType = void Function(dynamic val, String status, bool emit);
 
 class Device extends StatelessWidget {
   final Map device;
-  final StatusCallbackType statusCallback;
-  final StateCallbackType stateCallback;
+  final CallbackType deviceCallback;
 
   const Device({
     super.key,
     required this.device,
-    required this.statusCallback,
-    required this.stateCallback,
+    required this.deviceCallback,
   });
 
   _setTypeOfTile() {
     if (device["type"] == "brht") {
       return BrigtnessDevice(
         device: device,
-        stateCallback: stateCallback,
-        statusCallback: statusCallback,
+        deviceCallback: deviceCallback,
       );
     } else if (device["type"] == "onf") {
       return OnOffDevice(
         device: device,
-        stateCallback: stateCallback,
-        statusCallback: statusCallback,
+        deviceCallback: deviceCallback,
       );
     } else {
       return UnknownDevice(device: device);
@@ -43,13 +38,11 @@ class Device extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (device["status"] == "Off" && device["status"] != null) {
-          statusCallback("On");
-          device['state']['status'] = true;
-          stateCallback(device['state'], true);
+          device['settings']['status'] = true;
+          deviceCallback(device['settings'], "On", true);
         } else if (device["status"] != null) {
-          statusCallback("Off");
-          device['state']['status'] = false;
-          stateCallback(device['state'], true);
+          device['settings']['status'] = false;
+          deviceCallback(device['settings'], "Off", true);
         }
       },
       onLongPress: () => device["status"] != null
