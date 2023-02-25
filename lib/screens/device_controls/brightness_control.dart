@@ -45,8 +45,10 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   @override
   void initState() {
     setState(() {
-      sliderValue = widget.device["state"]['value'];
-      sliderState = widget.device["state"]['status'];
+      if (widget.device["state"] != null) {
+        sliderValue = widget.device["state"]['value'];
+        sliderState = widget.device["state"]['status'];
+      }
     });
 
     socket = initSocket();
@@ -149,7 +151,6 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
               },
               groupValue: !sliderState ? "off" : "on",
               onValueChanged: (value) {
-                setState(() => sliderState = value == "on" ? true : false);
                 setSliderState(value == "on" ? true : false);
               },
             )

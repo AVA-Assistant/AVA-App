@@ -125,8 +125,7 @@ class _DevicesState extends State<Devices> {
             ),
           ),
           const SizedBox(height: 15),
-          // const Device(),
-          if (devices != null)
+          if (devices!.isNotEmpty)
             GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,

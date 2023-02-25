@@ -74,7 +74,7 @@ class _AddDeviceState extends State<AddDevice> {
           style: TextStyle(color: Colors.white, fontSize: 22),
         ),
       ),
-      floatingActionButton: icon != null && name != ""
+      floatingActionButton: icon != null && name != "" && name != null && mqtt != null
           ? FloatingActionButton(
               elevation: 5,
               backgroundColor: const Color(0xDFFFFFFF),

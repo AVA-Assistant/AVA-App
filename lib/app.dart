@@ -83,7 +83,7 @@ class _AppState extends State<App> {
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20),
+              padding: const EdgeInsets.only(left: 20, top: 30),
               child: Column(children: [
                 Header(
                   time: time,
@@ -91,7 +91,7 @@ class _AppState extends State<App> {
                 const SizedBox(height: 40),
                 Scenes(time: time, scenes: scenes),
                 const SizedBox(height: 40),
-                Devices(time: time)
+                Devices(time: time),
               ]),
             ),
           ),

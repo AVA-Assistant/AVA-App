@@ -36,7 +36,9 @@ class _OnOffDeviceState extends State<OnOffDevice> {
   @override
   void initState() {
     setState(() {
-      sliderState = widget.device["state"]['status'];
+      if (widget.device["state"] != null) {
+        sliderState = widget.device["state"]['status'];
+      }
     });
 
     socket = initSocket();
