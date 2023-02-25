@@ -3,6 +3,7 @@ import 'package:ava_app/tiles/device_settings_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import '../initSocket.dart';
 
 class DevicesScreen extends StatefulWidget {
   final List devices;
@@ -34,7 +35,10 @@ class _DevicesScreenState extends State<DevicesScreen> {
           );
 
           setState(() {
-            if (newDevice != null) widget.devices.add(newDevice);
+            if (newDevice != null) {
+              widget.devices.add(newDevice);
+              socket.emit("setup", [widget.devices]);
+            }
           });
         },
       ),
@@ -96,7 +100,29 @@ class _DevicesScreenState extends State<DevicesScreen> {
                     label: 'Edit',
                   ),
                   SlidableAction(
-                    onPressed: (context) => setState(() => widget.devices.removeAt(index)),
+                    // onPressed: (context) => setState(() => widget.devices.removeAt(index)),
+                    onPressed: (context) => showCupertinoModalPopup(
+                      context: context,
+                      builder: (BuildContext context) => CupertinoAlertDialog(
+                        title: const Text('Warning!'),
+                        content: Text('Are you sure you want to delete "${widget.devices[index]["name"]}" device?'),
+                        actions: <CupertinoDialogAction>[
+                          CupertinoDialogAction(
+                            isDefaultAction: true,
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          CupertinoDialogAction(
+                            isDestructiveAction: true,
+                            onPressed: () {
+                              setState(() => widget.devices.removeAt(index));
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Yes'),
+                          ),
+                        ],
+                      ),
+                    ),
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     icon: Icons.delete,

@@ -30,8 +30,6 @@ class _DevicesState extends State<Devices> {
     socket = initSocket();
     appBox = Hive.box('appBox');
 
-    socket.onConnect((data) => socket.emit("setup", [appBox.get("devices")]));
-
     var newDevices = appBox.get("devices");
 
     if (newDevices != null) {
@@ -39,9 +37,11 @@ class _DevicesState extends State<Devices> {
         tempDevice["status"] = null;
       }
       setState(() => devices = newDevices);
-
-      socket.on("setup", (data) => setState(() => devices = data));
     }
+
+    socket.onConnect((data) => socket.emit("setup", [appBox.get("devices")]));
+
+    socket.on("setup", (data) => setState(() => devices = data));
 
     socket.on("stateChanged", (data) {
       var updatedDevice = devices!.where((dev) => dev["mqtt_Id"] == data["mqtt_Id"]).first;

@@ -23,19 +23,17 @@ class BrigtnessDevice extends StatefulWidget {
 class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   double sliderValue = 0;
   bool sliderState = false;
-  final double min = 0;
-  final double max = 255;
 
   void setSliderState(bool state) {
     setState(() => sliderState = state);
 
-    widget.deviceCallback({'status': state, 'value': sliderValue}, state ? "${sliderValue.toStringAsFixed(1)}%" : "Off", true);
+    widget.deviceCallback({'status': state, 'value': sliderValue}, state ? "${(sliderValue * 100).toStringAsFixed(1)}%" : "Off", true);
   }
 
   void setSliderValue(double state, bool emit) {
     setState(() => sliderValue = state);
 
-    widget.deviceCallback({'status': sliderState, 'value': state}, '${state.toStringAsFixed(1)}%', emit);
+    widget.deviceCallback({'status': sliderState, 'value': state}, '${(state * 100).toStringAsFixed(1)}%', emit);
   }
 
   @override
@@ -117,7 +115,7 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
                   child: Slider(
                     value: sliderValue,
                     min: 0,
-                    max: 100,
+                    max: 1,
                     activeColor: sliderState ? Colors.white : Colors.grey[600],
                     inactiveColor: Colors.grey[800],
                     onChanged: (value) => sliderState ? setSliderValue(value, false) : null,
