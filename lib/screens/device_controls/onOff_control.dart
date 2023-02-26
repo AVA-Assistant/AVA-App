@@ -25,7 +25,7 @@ class _OnOffDeviceState extends State<OnOffDevice> {
 
   void setDeviceState(bool state) {
     setState(() => sliderState = state);
-    widget.deviceCallback({'status': state}, state ? "On" : "Off", true);
+    widget.deviceCallback({'state': state}, state ? "On" : "Off", true);
   }
 
   @override

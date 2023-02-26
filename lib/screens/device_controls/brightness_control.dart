@@ -29,13 +29,25 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   void setSliderState(bool state) {
     setState(() => sliderState = state);
 
-    widget.deviceCallback({'status': state, 'brightness': sliderValue}, state ? "${(sliderValue * 100).toStringAsFixed(1)}%" : "Off", true);
+    widget.deviceCallback({'state': state, 'brightness': sliderValue}, state ? "${(sliderValue * 100).toStringAsFixed(1)}%" : "Off", true);
   }
 
   void setSliderValue(double state, bool emit) {
-    setState(() => sliderValue = state);
+    if (state == 0) {
+      setState(() {
+        sliderState = false;
+        sliderValue = state;
+      });
 
-    widget.deviceCallback({'status': sliderState, 'brightness': state}, '${(state * 100).toStringAsFixed(1)}%', emit);
+      widget.deviceCallback({'state': sliderState, 'brightness': state}, "Off", emit);
+    } else {
+      setState(() {
+        sliderState = true;
+        sliderValue = state;
+      });
+
+      widget.deviceCallback({'state': sliderState, 'brightness': state}, '${(state * 100).toStringAsFixed(1)}%', emit);
+    }
   }
 
   @override
@@ -118,8 +130,8 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
                     max: 1,
                     activeColor: sliderState ? Colors.white : Colors.grey[600],
                     inactiveColor: Colors.grey[800],
-                    onChanged: (value) => sliderState ? setSliderValue(value, false) : null,
-                    onChangeEnd: (value) => sliderState ? setSliderValue(value, true) : null,
+                    onChanged: (value) => setSliderValue(value, false),
+                    onChangeEnd: (value) => setSliderValue(value, true),
                   ),
                 ),
               ),
