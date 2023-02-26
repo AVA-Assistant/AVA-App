@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socket_io_client/socket_io_client.dart';
+
+import '../../initSocket.dart';
 
 class UnknownDevice extends StatelessWidget {
   final Map device;
@@ -7,6 +10,7 @@ class UnknownDevice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    socket.onDisconnect((data) => Navigator.pop(context));
     return Container(
       decoration: const BoxDecoration(
           color: Color(0xff1E1E1E),

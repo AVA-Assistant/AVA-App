@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-
 import '../../initSocket.dart';
 
 typedef CallbackType = void Function(dynamic val, String status, bool emit);
@@ -31,15 +30,13 @@ class _OnOffDeviceState extends State<OnOffDevice> {
 
   @override
   void initState() {
+    super.initState();
+
     setState(() {
       if (widget.device["settings"] != null) {
         sliderState = widget.device["settings"]['status'];
       }
     });
-
-    socket = initSocket();
-
-    socket.onDisconnect((data) => Navigator.pop(context));
 
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"]) {
@@ -48,7 +45,8 @@ class _OnOffDeviceState extends State<OnOffDevice> {
         });
       }
     });
-    super.initState();
+
+    socket.onDisconnect((data) => Navigator.pop(context));
   }
 
   @override
@@ -120,7 +118,6 @@ class _OnOffDeviceState extends State<OnOffDevice> {
                 },
                 groupValue: !sliderState ? "off" : "on",
                 onValueChanged: (value) {
-                  setState(() => sliderState = value == "on" ? true : false);
                   setDeviceState(value == "on" ? true : false);
                 },
               ),

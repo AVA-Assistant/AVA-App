@@ -27,30 +27,28 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   void setSliderState(bool state) {
     setState(() => sliderState = state);
 
-    widget.deviceCallback({'status': state, 'value': sliderValue}, state ? "${(sliderValue * 100).toStringAsFixed(1)}%" : "Off", true);
+    widget.deviceCallback({'status': state, 'brightness': sliderValue}, state ? "${(sliderValue * 100).toStringAsFixed(1)}%" : "Off", true);
   }
 
   void setSliderValue(double state, bool emit) {
     setState(() => sliderValue = state);
 
-    widget.deviceCallback({'status': sliderState, 'value': state}, '${(state * 100).toStringAsFixed(1)}%', emit);
+    widget.deviceCallback({'status': sliderState, 'brightness': state}, '${(state * 100).toStringAsFixed(1)}%', emit);
   }
 
   @override
   void initState() {
     if (widget.device["settings"] != null) {
       setState(() {
-        sliderValue = widget.device["settings"]['value'];
+        sliderValue = widget.device["settings"]['brightness'];
         sliderState = widget.device["settings"]['status'];
       });
     }
 
-    socket = initSocket();
-
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"]) {
         setState(() {
-          sliderValue = data['settings']['value'];
+          sliderValue = data['settings']['brightness'];
           sliderState = data['settings']['status'];
         });
       }
