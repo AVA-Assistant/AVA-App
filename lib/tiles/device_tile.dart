@@ -1,5 +1,6 @@
 import 'package:ava_app/screens/device_controls/brightness_control.dart';
 import 'package:ava_app/screens/device_controls/onOff_control.dart';
+import 'package:ava_app/screens/device_controls/rgb_control.dart';
 import 'package:ava_app/screens/device_controls/unknown_device.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,11 @@ class Device extends StatelessWidget {
         device: device,
         deviceCallback: deviceCallback,
       );
+    } else if (device["type"] == "rgb") {
+      return RgbDevice(
+        device: device,
+        deviceCallback: deviceCallback,
+      );
     } else {
       return UnknownDevice(device: device);
     }
@@ -39,6 +45,7 @@ class Device extends StatelessWidget {
       onTap: () {
         if (device["status"] == "Off" && device["status"] != null) {
           device['settings']['status'] = true;
+
           deviceCallback(device['settings'], "On", true);
         } else if (device["status"] != null) {
           device['settings']['status'] = false;
