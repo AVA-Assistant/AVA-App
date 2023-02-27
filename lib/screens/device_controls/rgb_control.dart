@@ -21,10 +21,10 @@ class RgbDevice extends StatefulWidget {
   });
 
   @override
-  State<RgbDevice> createState() => RgbeState();
+  State<RgbDevice> createState() => _RgbDeviceState();
 }
 
-class RgbeState extends State<RgbDevice> {
+class _RgbDeviceState extends State<RgbDevice> {
   bool lightState = false;
   double sliderValue = 0;
   String lightMode = "color";
@@ -90,7 +90,10 @@ class RgbeState extends State<RgbDevice> {
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"] && mounted) {
         setState(() {
-          lightState = data['settings']['state'];
+          sliderValue = widget.device['settings']['brightness'];
+          lightState = widget.device["settings"]['state'];
+          lightMode = widget.device["settings"]['mode'];
+          lightColor = Color.fromARGB(255, widget.device["settings"]['red'], widget.device["settings"]['green'], widget.device["settings"]['blue']);
         });
       }
     });
@@ -130,7 +133,7 @@ class RgbeState extends State<RgbDevice> {
                   ),
                 ),
                 Text(
-                  "Set brightness",
+                  "Set RGB lights",
                   style: GoogleFonts.heebo(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,

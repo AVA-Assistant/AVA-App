@@ -41,7 +41,7 @@ class _OnOffDeviceState extends State<OnOffDevice> {
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"] && mounted) {
         setState(() {
-          sliderState = data['settings']['status'];
+          sliderState = data['settings']['state'];
         });
       }
     });
