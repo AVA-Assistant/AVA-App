@@ -1,0 +1,266 @@
+import 'package:ava_app/initSocket.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:socket_io_client/socket_io_client.dart';
+import '../../addons/custom_slider_shape.dart';
+import '../../addons/custom_slider_shape_ctt.dart';
+
+typedef CallbackType = void Function(dynamic val, String status, bool emit);
+
+class CttDevice extends StatefulWidget {
+  final Map device;
+  final CallbackType deviceCallback;
+
+  const CttDevice({
+    super.key,
+    required this.device,
+    required this.deviceCallback,
+  });
+
+  @override
+  State<CttDevice> createState() => _CttDeviceState();
+}
+
+class _CttDeviceState extends State<CttDevice> {
+  bool lightState = false;
+  double sliderValue = 0;
+  int warmLight = 127;
+  int coldLight = 128;
+  String lightMode = "manual";
+
+  void sendData(bool emit) {
+    widget.deviceCallback({'state': lightState, "mode": lightMode, 'brightness': sliderValue, "cold": coldLight, "warm": warmLight}, "Off", emit);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      if (widget.device["settings"] != null) {
+        sliderValue = widget.device['settings']['brightness'];
+        lightState = widget.device["settings"]['state'];
+        lightMode = widget.device["settings"]['mode'];
+        warmLight = widget.device["settings"]['warm'];
+        coldLight = widget.device["settings"]['cold'];
+      }
+    });
+
+    socket.on("stateChanged", (data) {
+      if (data["mqtt_Id"] == widget.device["mqtt_Id"] && mounted) {
+        setState(() {
+          sliderValue = widget.device['settings']['brightness'];
+          lightState = widget.device["settings"]['state'];
+          lightMode = widget.device["settings"]['mode'];
+          warmLight = widget.device["settings"]['warm'];
+          coldLight = widget.device["settings"]['cold'];
+        });
+      }
+    });
+
+    socket.onDisconnect((data) => Navigator.pop(context));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color(0xff1E1E1E),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(40),
+          topRight: Radius.circular(40),
+        ),
+      ),
+      height: MediaQuery.of(context).size.height * 0.9,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 50, bottom: 75),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: Text(
+                    widget.device["name"],
+                    style: GoogleFonts.heebo(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  "Set color temperature",
+                  style: GoogleFonts.heebo(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[400],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  height: 350,
+                  child: SliderTheme(
+                    data: SliderThemeData(
+                      trackHeight: 110,
+                      thumbShape: SliderComponentShape.noOverlay,
+                      overlayShape: SliderComponentShape.noOverlay,
+                      valueIndicatorShape: SliderComponentShape.noOverlay,
+                      trackShape: const CustomRoundedRectSliderTrackShape(Radius.circular(20)),
+                    ),
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Slider(
+                        value: sliderValue,
+                        min: 0,
+                        max: 1,
+                        activeColor: lightState ? Colors.white : Colors.grey[600],
+                        inactiveColor: Colors.grey[800],
+                        onChangeStart: ((value) {
+                          setState(() => lightMode = "manual");
+                        }),
+                        onChanged: (value) {
+                          setState(() {
+                            sliderValue = value;
+                            lightState = value == 0 ? false : true;
+                          });
+
+                          sendData(false);
+                        },
+                        onChangeEnd: (value) {
+                          setState(() {
+                            sliderValue = value;
+                            lightState = value == 0 ? false : true;
+                          });
+                          sendData(true);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 350,
+                  child: SliderTheme(
+                    data: SliderThemeData(
+                      trackHeight: 110,
+                      thumbShape: SliderComponentShape.noOverlay,
+                      overlayShape: SliderComponentShape.noOverlay,
+                      valueIndicatorShape: SliderComponentShape.noOverlay,
+                      trackShape: const CustomRoundedRectSliderTrackShapeCCT(Radius.circular(20)),
+                    ),
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Slider(
+                        value: coldLight.toDouble(),
+                        min: 0,
+                        max: 255,
+                        inactiveColor: Colors.white,
+                        onChangeStart: ((value) {
+                          setState(() {
+                            lightMode = "manual";
+                            lightState = true;
+                          });
+                        }),
+                        onChanged: (value) {
+                          setState(() {
+                            coldLight = value.toInt();
+                            warmLight = (255 - value).toInt();
+                          });
+                          sendData(false);
+                        },
+                        onChangeEnd: (value) {
+                          setState(() {
+                            coldLight = value.toInt();
+                            warmLight = (255 - value).toInt();
+                          });
+                          sendData(true);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+              child: Column(
+                children: [
+                  CupertinoSlidingSegmentedControl(
+                    padding: const EdgeInsets.all(7),
+                    thumbColor: Colors.white,
+                    children: {
+                      "auto": SizedBox(
+                        width: 200,
+                        child: Text(
+                          "Auto",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: lightMode == 'auto' ? const Color(0xff1e1e1e) : Colors.white),
+                        ),
+                      ),
+                      "manual": SizedBox(
+                        width: 200,
+                        child: Text(
+                          "Manual",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: lightMode == 'manual' ? const Color(0xff1e1e1e) : Colors.white),
+                        ),
+                      ),
+                    },
+                    groupValue: lightMode,
+                    onValueChanged: (value) {
+                      setState(() {
+                        lightMode = value!;
+                        lightState = true;
+                      });
+                      sendData(true);
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CupertinoSlidingSegmentedControl(
+                    padding: const EdgeInsets.all(7),
+                    thumbColor: Colors.white,
+                    children: {
+                      "on": SizedBox(
+                        width: 200,
+                        child: Text(
+                          "On",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: !lightState ? Colors.white : const Color(0xff1e1e1e)),
+                        ),
+                      ),
+                      "off": SizedBox(
+                        width: 200,
+                        child: Text(
+                          "Off",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: lightState ? Colors.white : const Color(0xff1e1e1e)),
+                        ),
+                      ),
+                    },
+                    groupValue: !lightState ? "off" : "on",
+                    onValueChanged: (value) {
+                      setState(() {
+                        lightState = value == "on" ? true : false;
+                      });
+                      sendData(true);
+                    },
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

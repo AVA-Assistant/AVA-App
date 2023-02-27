@@ -1,4 +1,5 @@
 import 'package:ava_app/screens/device_controls/brightness_control.dart';
+import 'package:ava_app/screens/device_controls/cct_control.dart';
 import 'package:ava_app/screens/device_controls/onOff_control.dart';
 import 'package:ava_app/screens/device_controls/rgb_control.dart';
 import 'package:ava_app/screens/device_controls/unknown_device.dart';
@@ -31,6 +32,11 @@ class Device extends StatelessWidget {
       );
     } else if (device["type"] == "rgb") {
       return RgbDevice(
+        device: device,
+        deviceCallback: deviceCallback,
+      );
+    } else if (device["type"] == "ctt") {
+      return CttDevice(
         device: device,
         deviceCallback: deviceCallback,
       );
