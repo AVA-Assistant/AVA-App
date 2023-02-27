@@ -35,7 +35,7 @@ class Device extends StatelessWidget {
         device: device,
         deviceCallback: deviceCallback,
       );
-    } else if (device["type"] == "ctt") {
+    } else if (device["type"] == "cct") {
       return CttDevice(
         device: device,
         deviceCallback: deviceCallback,
@@ -50,11 +50,11 @@ class Device extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (device["status"] == "Off" && device["status"] != null) {
-          device['settings']['status'] = true;
+          device['settings']['state'] = true;
 
           deviceCallback(device['settings'], "On", true);
         } else if (device["status"] != null) {
-          device['settings']['status'] = false;
+          device['settings']['state'] = false;
           deviceCallback(device['settings'], "Off", true);
         }
       },
@@ -78,20 +78,18 @@ class Device extends StatelessWidget {
           child: Row(children: [
             Center(
               child: Container(
-                height: 40,
-                width: 40,
+                height: 35,
+                width: 35,
                 decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(50)), color: Color(0xCC141414)),
-                child: Center(
-                  child: Icon(
-                    IconData(device["icon"], fontFamily: CupertinoIcons.iconFont, fontPackage: CupertinoIcons.iconFontPackage),
-                    size: 25,
-                    color: Colors.white,
-                  ),
+                child: Icon(
+                  IconData(device["icon"], fontFamily: CupertinoIcons.iconFont, fontPackage: CupertinoIcons.iconFontPackage),
+                  size: 22,
+                  color: Colors.white,
                 ),
               ),
             ),
             const SizedBox(
-              width: 12,
+              width: 10,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,20 +99,43 @@ class Device extends StatelessWidget {
                   device["name"],
                   style: GoogleFonts.heebo(
                     color: device["status"] == "Off" || device["status"] == null ? const Color(0xFFFFFFFF) : const Color(0xff333333),
-                    fontSize: 16,
+                    fontSize: 14,
                     height: 1.2,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Text(
-                  device["status"] ?? "Loading...",
-                  style: GoogleFonts.heebo(
-                    color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
-                    fontSize: 14,
-                    height: 1.2,
-                    fontWeight: FontWeight.w400,
+                // Text(
+                //   device["status"] ?? "Loading...",
+                //   style: GoogleFonts.heebo(
+                //     color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
+                //     fontSize: 14,
+                //     height: 1.2,
+                //     fontWeight: FontWeight.w400,
+                //   ),
+                // ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: device["status"] + ' ' ?? "Loading...",
+                        style: GoogleFonts.heebo(
+                          color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
+                          fontSize: 12,
+                          height: 1.2,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      if (device['settings']['mode'] == 'auto')
+                        WidgetSpan(
+                          child: Icon(
+                            Icons.auto_awesome,
+                            size: 14,
+                            color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff222222),
+                          ),
+                        ),
+                    ],
                   ),
-                ),
+                )
               ],
             )
           ]),
