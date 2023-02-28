@@ -29,7 +29,11 @@ class _DevicesState extends State<Devices> {
 
     socket = initSocket();
     appBox = Hive.box('appBox');
-
+    // appBox.put('devices', [
+    //   {'id': '003', 'name': 'Ambient leds', 'mqtt_Id': 'cct_003', 'icon': 23190, 'type': 'cct'},
+    //   {'id': '002', 'name': 'Main leds', 'mqtt_Id': 'rgb_002', 'icon': 63190, 'type': 'rgb'},
+    //   {'id': '001', 'name': 'Main lights', 'mqtt_Id': 'brth_001', 'icon': 63198, 'type': 'brht'},
+    // ]);
     var newDevices = appBox.get("devices");
 
     if (newDevices != null) {
@@ -39,9 +43,9 @@ class _DevicesState extends State<Devices> {
       setState(() => devices = newDevices);
     }
 
-    socket.onConnect((data) => socket.emit("setup", [appBox.get("devices")]));
+    socket.onConnect((data) => socket.emit("setupDevices", [appBox.get("devices")]));
 
-    socket.on("setup", (data) => setState(() => devices = data));
+    socket.on("setupDevices", (data) => setState(() => devices = data));
 
     socket.on("stateChanged", (data) {
       var updatedDevice = devices!.where((dev) => dev["mqtt_Id"] == data["mqtt_Id"]).first;

@@ -37,7 +37,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
           setState(() {
             if (newDevice != null) {
               widget.devices.add(newDevice);
-              socket.emit("setup", [widget.devices]);
+              socket.emit("setupDevices", [widget.devices]);
             }
           });
         },
@@ -91,7 +91,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                         if (newDevice != null) {
                           widget.devices.removeAt(index);
                           widget.devices.insert(index, newDevice);
-                          socket.emit("setup", [widget.devices]);
+                          socket.emit("setupDevices", [widget.devices]);
                         }
                       });
                     },

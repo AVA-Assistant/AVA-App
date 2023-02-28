@@ -33,9 +33,9 @@ class _RgbDeviceState extends State<RgbDevice> {
 
   String createStatus() {
     if (lightMode == 'disco') {
-      return 'Disco';
+      return 'Disco, ${(sliderValue * 100).round()}%';
     } else if (lightMode == 'wave') {
-      return "Wave";
+      return "Wave, ${(sliderValue * 100).round()}%";
     } else {
       return '${predictColorName(lightColor.red, lightColor.green, lightColor.blue)}, ${(sliderValue * 100).round()}%';
     }
