@@ -154,7 +154,7 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
                     value: sliderValue,
                     min: 0,
                     max: 1,
-                    activeColor: sliderState ? Colors.white : Colors.grey[800],
+                    activeColor: sliderState ? Colors.white : Colors.grey[600],
                     inactiveColor: Colors.grey[800],
                     onChanged: (value) => setSliderValue(value, false),
                     onChangeEnd: (value) => setSliderValue(value, true),

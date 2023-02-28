@@ -164,7 +164,7 @@ class _CttDeviceState extends State<CttDevice> {
                         value: sliderValue,
                         min: 0,
                         max: 1,
-                        activeColor: lightState && !autoLight ? Colors.white : Colors.grey[800],
+                        activeColor: lightState && !autoLight ? Colors.white : Colors.grey[600],
                         inactiveColor: Colors.grey[800],
                         onChangeStart: ((value) {
                           setState(() => autoLight = false);

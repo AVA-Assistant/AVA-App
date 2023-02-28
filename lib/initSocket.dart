@@ -3,7 +3,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 late Socket socket;
 
 Socket initSocket() {
-  socket = io("http://192.168.1.190:2500", <String, dynamic>{
+  socket = io("http://localhost:2500", <String, dynamic>{
     'force new connection': true,
     "transports": ['websocket']
   });

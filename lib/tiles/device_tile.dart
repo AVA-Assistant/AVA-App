@@ -1,6 +1,7 @@
 import 'package:ava_app/screens/device_controls/brightness_control.dart';
 import 'package:ava_app/screens/device_controls/cct_control.dart';
 import 'package:ava_app/screens/device_controls/onOff_control.dart';
+import 'package:ava_app/screens/device_controls/rgb_cct_control.dart';
 import 'package:ava_app/screens/device_controls/rgb_control.dart';
 import 'package:ava_app/screens/device_controls/unknown_device.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,6 +38,11 @@ class Device extends StatelessWidget {
       );
     } else if (device["type"] == "cct") {
       return CttDevice(
+        device: device,
+        deviceCallback: deviceCallback,
+      );
+    } else if (device["type"] == "rgbcct") {
+      return RgbCttDevice(
         device: device,
         deviceCallback: deviceCallback,
       );
