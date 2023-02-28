@@ -185,7 +185,7 @@ class _RgbDeviceState extends State<RgbDevice> {
                       value: sliderValue,
                       min: 0,
                       max: 1,
-                      activeColor: lightState ? Colors.white : Colors.grey[600],
+                      activeColor: lightState ? Colors.white : Colors.grey[800],
                       inactiveColor: Colors.grey[800],
                       onChanged: (value) {
                         if (lightState) {

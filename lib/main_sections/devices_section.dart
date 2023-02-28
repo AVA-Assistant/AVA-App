@@ -30,9 +30,11 @@ class _DevicesState extends State<Devices> {
     socket = initSocket();
     appBox = Hive.box('appBox');
     // appBox.put('devices', [
-    //   {'id': '003', 'name': 'Ambient leds', 'mqtt_Id': 'cct_003', 'icon': 23190, 'type': 'cct'},
-    //   {'id': '002', 'name': 'Main leds', 'mqtt_Id': 'rgb_002', 'icon': 63190, 'type': 'rgb'},
     //   {'id': '001', 'name': 'Main lights', 'mqtt_Id': 'brth_001', 'icon': 63198, 'type': 'brht'},
+    //   {'id': '002', 'name': 'Switch', 'mqtt_Id': 'onf_002', 'icon': 63120, 'type': 'onf'},
+    //   {'id': '003', 'name': 'Ambient leds', 'mqtt_Id': 'cct_003', 'icon': 23190, 'type': 'cct'},
+    //   {'id': '004', 'name': 'Main leds', 'mqtt_Id': 'rgb_004', 'icon': 63190, 'type': 'rgb'},
+    //   {'id': '005', 'name': 'Leds', 'mqtt_Id': 'rgbcct_005', 'icon': 63390, 'type': 'rgbcct'},
     // ]);
     var newDevices = appBox.get("devices");
 

@@ -25,11 +25,15 @@ class BrigtnessDevice extends StatefulWidget {
 class _BrigtnessDeviceState extends State<BrigtnessDevice> {
   double sliderValue = 0;
   bool sliderState = false;
+  bool autoLight = false;
 
   void setSliderState(bool state) {
-    setState(() => sliderState = state);
+    setState(() {
+      sliderState = state;
+      autoLight = false;
+    });
 
-    widget.deviceCallback({'state': state, 'brightness': sliderValue}, state ? "${(sliderValue * 100).toStringAsFixed(1)}%" : "Off", true);
+    widget.deviceCallback({'state': state, 'brightness': sliderValue, "auto": autoLight}, state ? "${(sliderValue * 100).toStringAsFixed(1)}%" : "Off", true);
   }
 
   void setSliderValue(double state, bool emit) {
@@ -37,16 +41,18 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
       setState(() {
         sliderState = false;
         sliderValue = state;
+        autoLight = false;
       });
 
-      widget.deviceCallback({'state': sliderState, 'brightness': state}, "Off", emit);
+      widget.deviceCallback({'state': sliderState, 'brightness': state, "auto": autoLight}, "Off", emit);
     } else {
       setState(() {
         sliderState = true;
+        autoLight = false;
         sliderValue = state;
       });
 
-      widget.deviceCallback({'state': sliderState, 'brightness': state}, '${(state * 100).toStringAsFixed(1)}%', emit);
+      widget.deviceCallback({'state': sliderState, 'brightness': state, "auto": autoLight}, '${(state * 100).toStringAsFixed(1)}%', emit);
     }
   }
 
@@ -56,6 +62,7 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
       setState(() {
         sliderValue = widget.device["settings"]['brightness'];
         sliderState = widget.device["settings"]['state'];
+        autoLight = widget.device["settings"]['auto'];
       });
     }
 
@@ -64,6 +71,7 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
         setState(() {
           sliderValue = data['settings']['brightness'];
           sliderState = data['settings']['state'];
+          autoLight = widget.device["settings"]['auto'];
         });
       }
     });
@@ -94,12 +102,30 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
-                  child: Text(
-                    widget.device["name"],
-                    style: GoogleFonts.heebo(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.device["name"],
+                        style: GoogleFonts.heebo(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        height: 45,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            setState(() => autoLight = !autoLight);
+                            widget.deviceCallback({'state': sliderState, 'brightness': sliderValue, "auto": autoLight}, sliderState ? "${(sliderValue * 100).toStringAsFixed(1)}%" : "Off", true);
+                          },
+                          backgroundColor: autoLight ? Colors.purpleAccent[400] : Colors.grey[800],
+                          child: Center(child: Icon(Icons.auto_awesome, size: 30, color: autoLight ? Colors.white : Colors.greenAccent)),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Text(
@@ -128,7 +154,7 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
                     value: sliderValue,
                     min: 0,
                     max: 1,
-                    activeColor: sliderState ? Colors.white : Colors.grey[600],
+                    activeColor: sliderState ? Colors.white : Colors.grey[800],
                     inactiveColor: Colors.grey[800],
                     onChanged: (value) => setSliderValue(value, false),
                     onChangeEnd: (value) => setSliderValue(value, true),

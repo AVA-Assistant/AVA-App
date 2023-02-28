@@ -67,6 +67,12 @@ class Device extends StatelessWidget {
               builder: (context) => _setTypeOfTile(),
             )
           : null,
+      onDoubleTap: () {
+        if (device["status"] != null && device["settings"] != null && device["settings"]["auto"] != null) {
+          device['settings']['auto'] = !device['settings']['auto'];
+          deviceCallback(device['settings'], device['status'], true);
+        }
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
@@ -107,7 +113,7 @@ class Device extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     children: [
-                      if (device['settings']['mode'] == 'auto' && device["status"] != null)
+                      if (device['settings'] != null ? device['settings']['auto'] == true && device["status"] != null : false)
                         WidgetSpan(
                             child: Container(
                           padding: const EdgeInsets.only(right: 2),

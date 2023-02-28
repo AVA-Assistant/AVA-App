@@ -21,11 +21,15 @@ class OnOffDevice extends StatefulWidget {
 }
 
 class _OnOffDeviceState extends State<OnOffDevice> {
-  bool sliderState = false;
+  bool lightState = false;
+  bool autoLight = false;
 
   void setDeviceState(bool state) {
-    setState(() => sliderState = state);
-    widget.deviceCallback({'state': state}, state ? "On" : "Off", true);
+    setState(() {
+      lightState = state;
+      autoLight = false;
+    });
+    widget.deviceCallback({'state': state, "auto": autoLight}, state ? "On" : "Off", true);
   }
 
   @override
@@ -34,14 +38,16 @@ class _OnOffDeviceState extends State<OnOffDevice> {
 
     setState(() {
       if (widget.device["settings"] != null) {
-        sliderState = widget.device["settings"]['state'];
+        lightState = widget.device["settings"]['state'];
+        autoLight = widget.device["settings"]['auto'];
       }
     });
 
     socket.on("stateChanged", (data) {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"] && mounted) {
         setState(() {
-          sliderState = data['settings']['state'];
+          lightState = data['settings']['state'];
+          autoLight = widget.device["settings"]['auto'];
         });
       }
     });
@@ -71,12 +77,30 @@ class _OnOffDeviceState extends State<OnOffDevice> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
-                  child: Text(
-                    widget.device["name"],
-                    style: GoogleFonts.heebo(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.device["name"],
+                        style: GoogleFonts.heebo(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        height: 45,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            setState(() => autoLight = !autoLight);
+                            widget.deviceCallback({'state': lightState, "auto": autoLight}, lightState ? "On" : "Off", true);
+                          },
+                          backgroundColor: autoLight ? Colors.purpleAccent[400] : Colors.grey[800],
+                          child: Center(child: Icon(Icons.auto_awesome, size: 30, color: autoLight ? Colors.white : Colors.greenAccent)),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Text(
@@ -101,7 +125,7 @@ class _OnOffDeviceState extends State<OnOffDevice> {
                       quarterTurns: 1,
                       child: Text(
                         "On",
-                        style: GoogleFonts.heebo(fontSize: 24, fontWeight: FontWeight.w500, color: !sliderState ? Colors.white : const Color(0xff1e1e1e)),
+                        style: GoogleFonts.heebo(fontSize: 28, fontWeight: FontWeight.w500, color: !lightState ? Colors.white : const Color(0xff1e1e1e)),
                       ),
                     ),
                   ),
@@ -111,12 +135,12 @@ class _OnOffDeviceState extends State<OnOffDevice> {
                       quarterTurns: 1,
                       child: Text(
                         "Off",
-                        style: GoogleFonts.heebo(fontSize: 24, fontWeight: FontWeight.w500, color: sliderState ? Colors.white : const Color(0xff1e1e1e)),
+                        style: GoogleFonts.heebo(fontSize: 28, fontWeight: FontWeight.w500, color: lightState ? Colors.white : const Color(0xff1e1e1e)),
                       ),
                     ),
                   ),
                 },
-                groupValue: !sliderState ? "off" : "on",
+                groupValue: !lightState ? "off" : "on",
                 onValueChanged: (value) {
                   setDeviceState(value == "on" ? true : false);
                 },
