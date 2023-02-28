@@ -47,7 +47,7 @@ class _DevicesState extends State<Devices> {
 
     socket.on("setupDevices", (data) => setState(() => devices = data));
 
-    socket.once("stateChanged", (data) {
+    socket.on("stateChanged", (data) {
       var updatedDevice = devices!.where((dev) => dev["mqtt_Id"] == data["mqtt_Id"]).first;
       setState(() {
         updatedDevice['settings'] = data['settings'];
