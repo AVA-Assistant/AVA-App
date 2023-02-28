@@ -76,14 +76,14 @@ class Device extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: Row(children: [
-            Center(
-              child: Container(
-                height: 35,
-                width: 35,
-                decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(50)), color: Color(0xCC141414)),
+            Container(
+              height: 35,
+              width: 35,
+              decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(50)), color: Color(0xCC141414)),
+              child: Center(
                 child: Icon(
                   IconData(device["icon"], fontFamily: CupertinoIcons.iconFont, fontPackage: CupertinoIcons.iconFontPackage),
-                  size: 22,
+                  size: 24,
                   color: Colors.white,
                 ),
               ),
@@ -95,6 +95,25 @@ class Device extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Text(
+                //   device["name"],
+                //   style: GoogleFonts.heebo(
+                //     color: device["status"] == "Off" || device["status"] == null ? const Color(0xFFFFFFFF) : const Color(0xff333333),
+                //     fontSize: 15,
+                //     height: 1.2,
+                //     fontWeight: FontWeight.w500,
+                //   ),
+                // ),
+                // Text(
+                //   device["status"] ?? "Loading...",
+                //   style: GoogleFonts.heebo(
+                //     color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
+                //     fontSize: 13,
+                //     height: 1.2,
+                //     fontWeight: FontWeight.w400,
+                //   ),
+                // ),
+
                 Text(
                   device["name"],
                   style: GoogleFonts.heebo(
@@ -104,38 +123,32 @@ class Device extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                // Text(
-                //   device["status"] ?? "Loading...",
-                //   style: GoogleFonts.heebo(
-                //     color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
-                //     fontSize: 14,
-                //     height: 1.2,
-                //     fontWeight: FontWeight.w400,
-                //   ),
-                // ),
+
                 RichText(
                   text: TextSpan(
                     children: [
+                      if (device['settings']['mode'] == 'auto' && device["status"] != null)
+                        WidgetSpan(
+                            child: Container(
+                          padding: const EdgeInsets.only(right: 2),
+                          child: Icon(
+                            Icons.auto_awesome,
+                            size: 13,
+                            color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff222222),
+                          ),
+                        )),
                       TextSpan(
-                        text: device["status"] + ' ' ?? "Loading...",
+                        text: device["status"] ?? "Loading...",
                         style: GoogleFonts.heebo(
                           color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
-                          fontSize: 12,
+                          fontSize: 11.5,
                           height: 1.2,
                           fontWeight: FontWeight.w400,
                         ),
-                      ),
-                      if (device['settings']['mode'] == 'auto')
-                        WidgetSpan(
-                          child: Icon(
-                            Icons.auto_awesome,
-                            size: 14,
-                            color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff222222),
-                          ),
-                        ),
+                      )
                     ],
                   ),
-                )
+                ),
               ],
             )
           ]),
