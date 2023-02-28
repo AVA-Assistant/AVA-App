@@ -74,7 +74,7 @@ class Device extends StatelessWidget {
           color: device["status"] == "Off" || device["status"] == null ? const Color(0x99141414) : const Color(0xB1FFFFFF),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: Row(children: [
             Container(
               height: 35,
@@ -89,31 +89,12 @@ class Device extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width: 10,
+              width: 12,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Text(
-                //   device["name"],
-                //   style: GoogleFonts.heebo(
-                //     color: device["status"] == "Off" || device["status"] == null ? const Color(0xFFFFFFFF) : const Color(0xff333333),
-                //     fontSize: 15,
-                //     height: 1.2,
-                //     fontWeight: FontWeight.w500,
-                //   ),
-                // ),
-                // Text(
-                //   device["status"] ?? "Loading...",
-                //   style: GoogleFonts.heebo(
-                //     color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
-                //     fontSize: 13,
-                //     height: 1.2,
-                //     fontWeight: FontWeight.w400,
-                //   ),
-                // ),
-
                 Text(
                   device["name"],
                   style: GoogleFonts.heebo(
@@ -123,7 +104,6 @@ class Device extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-
                 RichText(
                   text: TextSpan(
                     children: [
