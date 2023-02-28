@@ -3,7 +3,7 @@ import 'package:ava_app/tiles/device_settings_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import '../initSocket.dart';
+import '../addons/initSocket.dart';
 
 class DevicesScreen extends StatefulWidget {
   final List devices;
