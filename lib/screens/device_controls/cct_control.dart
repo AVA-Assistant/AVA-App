@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:ava_app/initSocket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,30 @@ class _CttDeviceState extends State<CttDevice> {
   String lightMode = "manual";
 
   void sendData(bool emit) {
-    widget.deviceCallback({'state': lightState, "mode": lightMode, 'brightness': sliderValue, "cold": coldLight, "warm": warmLight}, "Off", emit);
+    String status = '';
+
+    if (lightState) {
+      int distance = 1000;
+      var lights = [
+        {"name": "Very cold", "warmLight": 0, "color": Colors.blue[300]},
+        {"name": "Cold", "warmLight": 32, "color": Colors.blue[100]},
+        {"name": "Daylight", "warmLight": 100, "color": Colors.blue[50]},
+        {"name": "Warm", "warmLight": 140, "color": Colors.yellow[400]},
+        {"name": "Cosy", "warmLight": 200, "color": Colors.orange[400]},
+        {"name": "Ambient", "warmLight": 255, "color": Colors.red[400]},
+      ];
+      for (Map light in lights) {
+        if (sqrt(pow((warmLight - light['warmLight']), 2)) < distance) {
+          distance = sqrt(pow((warmLight - light['warmLight']), 2)).toInt();
+          status = light['name'];
+        }
+      }
+      status = '$status, ${(sliderValue * 100).round()}%';
+    } else {
+      status == "Off";
+    }
+
+    widget.deviceCallback({'state': lightState, "mode": lightMode, 'brightness': sliderValue, "cold": coldLight, "warm": warmLight}, status, emit);
   }
 
   @override

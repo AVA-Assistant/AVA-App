@@ -37,7 +37,7 @@ class _RgbDeviceState extends State<RgbDevice> {
     } else if (lightMode == 'wave') {
       return "Wave";
     } else {
-      return predictColorName(lightColor.red, lightColor.green, lightColor.blue);
+      return '${predictColorName(lightColor.red, lightColor.green, lightColor.blue)}, ${(sliderValue * 100).round()}%';
     }
   }
 
@@ -304,18 +304,16 @@ const colorFile = """
 240 255 255		Azure
 255 228 225		Rose
 255 255 255		White
-250 128 114   Salmon
-220  20  60   Crimson
-178  34  34   Fire brick
+250 128 114		Salmon
+220  20  60		Crimson
   0   0   0		Black
- 47  79  79		Dark Grey
+ 47  79  79		Dark grey
 105 105 105		Dim grey
 211 211 211		Light gray
   0   0 128		Navy blue
   0   0 255		Blue
  64 224 208		Turquoise
   0 255 255		Cyan
-127 255 212		Aquamarine
   0 255   0		Green
  50 205  50		Lime
 255 255   0		Yellow
@@ -325,16 +323,13 @@ const colorFile = """
 255   0   0		Red
  75   0 130   Indigo
 255 192 203		Pink
-255   0 255   Magenta
 176  48  96		Maroon
 255   0 255		Magenta
 238 130 238		Violet
 221 160 221		Plum
 160  32 240		Purple
-255 140   0		Dark orange
 169 169 169		Dark grey
   0   0 139   Dark blue
   0 139 139   Dark cyan
-139   0 139		Dark magenta
 139   0   0		Dark red
 144 238 144		Light green""";

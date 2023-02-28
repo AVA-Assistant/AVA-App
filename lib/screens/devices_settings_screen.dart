@@ -82,7 +82,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                             mqtt: {
                               "type": widget.devices[index]["type"],
                               "id": widget.devices[index]["id"],
-                              "mqtt_Id": widget.devices[index]["mqtt_id"],
+                              "mqtt_Id": widget.devices[index]["mqtt_Id"],
                             },
                           ),
                         ),
@@ -91,6 +91,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                         if (newDevice != null) {
                           widget.devices.removeAt(index);
                           widget.devices.insert(index, newDevice);
+                          socket.emit("setup", [widget.devices]);
                         }
                       });
                     },
