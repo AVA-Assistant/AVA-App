@@ -51,7 +51,7 @@ class _CttDeviceState extends State<CttDevice> {
       }
       status = '$status, ${(sliderValue * 100).round()}%';
     } else {
-      status == "Off";
+      status = "Off";
     }
 
     widget.deviceCallback({'state': lightState, "mode": lightMode, 'brightness': sliderValue, "cold": coldLight, "warm": warmLight}, status, emit);
@@ -146,7 +146,7 @@ class _CttDeviceState extends State<CttDevice> {
                         value: sliderValue,
                         min: 0,
                         max: 1,
-                        activeColor: lightState ? Colors.white : Colors.grey[600],
+                        activeColor: lightState && lightMode == 'manual' ? Colors.white : Colors.grey[600],
                         inactiveColor: Colors.grey[800],
                         onChangeStart: ((value) {
                           setState(() => lightMode = "manual");
@@ -186,7 +186,7 @@ class _CttDeviceState extends State<CttDevice> {
                         value: coldLight.toDouble(),
                         min: 0,
                         max: 255,
-                        inactiveColor: Colors.white,
+                        activeColor: lightState && lightMode == 'manual' ? Colors.white : Colors.grey[400],
                         onChangeStart: ((value) {
                           setState(() {
                             lightMode = "manual";

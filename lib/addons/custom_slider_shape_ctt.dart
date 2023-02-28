@@ -26,7 +26,7 @@ class CustomRoundedRectSliderTrackShapeCCT extends SliderTrackShape with BaseSli
       return;
     }
 
-    final ColorTween inactiveTrackColorTween = ColorTween(begin: sliderTheme.disabledInactiveTrackColor, end: sliderTheme.inactiveTrackColor);
+    final ColorTween activeTrackColorTween = ColorTween(begin: sliderTheme.disabledInactiveTrackColor, end: sliderTheme.activeTrackColor);
     final Paint rightTrackPaint = Paint()
       ..shader = const LinearGradient(
         colors: [
@@ -36,7 +36,7 @@ class CustomRoundedRectSliderTrackShapeCCT extends SliderTrackShape with BaseSli
           Colors.blue,
         ],
       ).createShader(const Rect.fromLTWH(0, 0, 350, 3000));
-    final Paint leftTrackPaint = Paint()..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
+    final Paint leftTrackPaint = Paint()..color = activeTrackColorTween.evaluate(enableAnimation)!;
 
     final Rect trackRect = getPreferredRect(
       parentBox: parentBox,
