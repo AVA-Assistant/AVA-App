@@ -79,7 +79,7 @@ class _RgbDeviceState extends State<RgbDevice> {
         colorChoices.add(ColorToName(name, int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2])));
       });
 
-      if (widget.device["settings"] != null) {
+      if (widget.device["settings"] != {}) {
         sliderValue = widget.device['settings']['brightness'];
         lightState = widget.device["settings"]['state'];
         lightMode = widget.device["settings"]['mode'];

@@ -62,12 +62,12 @@ class _CttDeviceState extends State<CttDevice> {
     super.initState();
 
     setState(() {
-      if (widget.device["settings"] != null) {
-        sliderValue = widget.device['settings']['brightness'];
-        lightState = widget.device["settings"]['state'];
-        autoLight = widget.device["settings"]['auto'];
-        warmLight = widget.device["settings"]['warm'];
-        coldLight = widget.device["settings"]['cold'];
+      if (widget.device["settings"] != {}) {
+        sliderValue = widget.device['settings']['brightness'] ?? 0;
+        lightState = widget.device["settings"]['state'] ?? false;
+        autoLight = widget.device["settings"]['auto'] ?? false;
+        warmLight = widget.device["settings"]['warm'] ?? 127;
+        coldLight = widget.device["settings"]['cold'] ?? 128;
       }
     });
 

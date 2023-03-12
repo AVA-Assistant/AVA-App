@@ -55,6 +55,7 @@ class Device extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print(device);
         if (device["status"] == "Off" && device["status"] != null) {
           device['settings']['state'] = true;
 

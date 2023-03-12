@@ -37,9 +37,9 @@ class _OnOffDeviceState extends State<OnOffDevice> {
     super.initState();
 
     setState(() {
-      if (widget.device["settings"] != null) {
-        lightState = widget.device["settings"]['state'];
-        autoLight = widget.device["settings"]['auto'];
+      if (widget.device["settings"] != {}) {
+        lightState = widget.device["settings"]['state'] ?? false;
+        autoLight = widget.device["settings"]['auto'] ?? false;
       }
     });
 

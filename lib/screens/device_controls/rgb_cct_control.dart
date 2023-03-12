@@ -70,14 +70,14 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
     super.initState();
 
     setState(() {
-      if (widget.device["settings"] != null) {
-        sliderValue = widget.device['settings']['brightness'];
-        lightState = widget.device["settings"]['state'];
-        lightMode = widget.device["settings"]['mode'];
-        warmLight = widget.device["settings"]['warm'];
-        coldLight = widget.device["settings"]['cold'];
-        autoLight = widget.device["settings"]['auto'];
-        lightColor = Color.fromARGB(255, widget.device["settings"]['red'], widget.device["settings"]['green'], widget.device["settings"]['blue']);
+      if (widget.device["settings"] != {}) {
+        sliderValue = widget.device['settings']['brightness'] ?? 0;
+        lightState = widget.device["settings"]['state'] ?? false;
+        lightMode = widget.device["settings"]['mode'] ?? 'cct';
+        warmLight = widget.device["settings"]['warm'] ?? 127;
+        coldLight = widget.device["settings"]['cold'] ?? 128;
+        autoLight = widget.device["settings"]['auto'] ?? false;
+        lightColor = widget.device["settings"]['red'] != null && widget.device["settings"]['green'] != null && widget.device["settings"]['blue'] != null ? Color.fromARGB(255, widget.device["settings"]['red'], widget.device["settings"]['green'], widget.device["settings"]['blue']) : Colors.white;
       }
     });
 

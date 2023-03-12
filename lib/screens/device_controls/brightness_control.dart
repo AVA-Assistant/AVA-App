@@ -58,11 +58,11 @@ class _BrigtnessDeviceState extends State<BrigtnessDevice> {
 
   @override
   void initState() {
-    if (widget.device["settings"] != null) {
+    if (widget.device["settings"] != {}) {
       setState(() {
-        sliderValue = widget.device["settings"]['brightness'];
-        sliderState = widget.device["settings"]['state'];
-        autoLight = widget.device["settings"]['auto'];
+        sliderValue = widget.device["settings"]['brightness'] ?? 0;
+        sliderState = widget.device["settings"]['state'] ?? false;
+        autoLight = widget.device["settings"]['auto'] ?? false;
       });
     }
 
