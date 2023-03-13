@@ -80,10 +80,10 @@ class _RgbDeviceState extends State<RgbDevice> {
       });
 
       if (widget.device["settings"] != {}) {
-        sliderValue = widget.device['settings']['brightness'];
-        lightState = widget.device["settings"]['state'];
-        lightMode = widget.device["settings"]['mode'];
-        lightColor = Color.fromARGB(255, widget.device["settings"]['red'], widget.device["settings"]['green'], widget.device["settings"]['blue']);
+        sliderValue = widget.device['settings']['brightness'] ?? 0;
+        lightState = widget.device["settings"]['state'] ?? false;
+        lightMode = widget.device["settings"]['mode'] ?? 'color';
+        lightColor = widget.device["settings"]['red'] != null && widget.device["settings"]['green'] != null && widget.device["settings"]['blue'] != null ? Color.fromARGB(255, widget.device["settings"]['red'], widget.device["settings"]['green'], widget.device["settings"]['blue']) : Colors.white;
       }
     });
 

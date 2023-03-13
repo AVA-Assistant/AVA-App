@@ -1,8 +1,13 @@
 import 'dart:ui';
+import 'package:ava_app/addons/initSocket.dart';
 import 'package:ava_app/main_sections/devices_section.dart';
 import 'package:ava_app/main_sections/header_section.dart';
 import 'package:ava_app/main_sections/scenes_section.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart';
+
+import 'addons/warning_popup.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -24,6 +29,37 @@ class _AppState extends State<App> {
     } else {
       return "night";
     }
+  }
+
+  String? warningPopupText = 'Connecting to the server';
+  bool? warningPopupError = false;
+  bool? visible = true;
+
+  void checkWifi(ConnectivityResult result) async {
+    if (result == ConnectivityResult.wifi) {
+      setState(() {
+        warningPopupError = null;
+        warningPopupText = null;
+      });
+    } else if (result == ConnectivityResult.mobile) {
+      setState(() {
+        warningPopupError = false;
+        warningPopupText = 'Connect to wifi"';
+      });
+    } else if (result == ConnectivityResult.none) {
+      setState(() {
+        warningPopupError = false;
+        warningPopupText = 'Turn on wifi';
+      });
+    }
+  }
+
+  checkConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    checkWifi(connectivityResult);
+
+    setState(() {});
   }
 
   List scenes = [
@@ -66,10 +102,34 @@ class _AppState extends State<App> {
   ];
 
   @override
+  void initState() {
+    socket = initSocket();
+
+    socket.onConnect((data) {
+      checkConnection();
+
+      Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+        checkWifi(result);
+        setState(() {});
+      });
+    });
+
+    socket.onDisconnect((data) => setState(() {
+          warningPopupError = true;
+          warningPopupText = 'Disconnected from the server, reconnecting';
+        }));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String time = getCurrentTime();
     scenes.sort((a, b) => a["name"].length.compareTo(b["name"].length));
-
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        visible = false;
+      });
+    });
     return Container(
       constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
       decoration: BoxDecoration(
@@ -85,9 +145,12 @@ class _AppState extends State<App> {
             child: Padding(
               padding: const EdgeInsets.only(left: 20, top: 30),
               child: Column(children: [
-                Header(
-                  time: time,
-                ),
+                Stack(children: [
+                  Header(
+                    time: time,
+                  ),
+                  WarningPopup(error: warningPopupError, text: warningPopupText),
+                ]),
                 const SizedBox(height: 40),
                 Scenes(time: time, scenes: scenes),
                 const SizedBox(height: 40),
