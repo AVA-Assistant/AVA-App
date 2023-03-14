@@ -70,14 +70,18 @@ class _DevicesState extends State<Devices> {
     setState(() => devices![index]["settings"] = val);
     setState(() => devices![index]["status"] = status);
     var device = devices![index];
-    socket.emit("changeState", {
-      'id': device['id'],
-      "type": device['type'],
-      "mqtt_Id": device['mqtt_Id'],
-      'settings': val,
-      'status': status,
-      "emit": emit,
-    });
+    socket.emit("changeState", [
+      [
+        {
+          'id': device['id'],
+          "type": device['type'],
+          "mqtt_Id": device['mqtt_Id'],
+          'settings': val,
+          'status': status,
+          "emit": emit,
+        }
+      ]
+    ]);
   }
 
   @override
