@@ -35,33 +35,6 @@ class _AppState extends State<App> {
   bool? warningPopupError = false;
   bool? visible = true;
 
-  void checkWifi(ConnectivityResult result) async {
-    if (result == ConnectivityResult.wifi) {
-      setState(() {
-        warningPopupError = null;
-        warningPopupText = null;
-      });
-    } else if (result == ConnectivityResult.mobile) {
-      setState(() {
-        warningPopupError = false;
-        warningPopupText = 'Connect to wifi"';
-      });
-    } else if (result == ConnectivityResult.none) {
-      setState(() {
-        warningPopupError = false;
-        warningPopupText = 'Turn on wifi';
-      });
-    }
-  }
-
-  checkConnection() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-
-    checkWifi(connectivityResult);
-
-    setState(() {});
-  }
-
   List scenes = [
     {
       'id': "scene_0",
@@ -106,18 +79,32 @@ class _AppState extends State<App> {
     socket = initSocket();
 
     socket.onConnect((data) {
-      checkConnection();
-
-      Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
-        checkWifi(result);
-        setState(() {});
+      setState(() {
+        warningPopupError = null;
+        warningPopupText = null;
       });
     });
 
-    socket.onDisconnect((data) => setState(() {
+    socket.onDisconnect((data) async {
+      var connectivityResult = await (Connectivity().checkConnectivity());
+
+      if (connectivityResult == ConnectivityResult.wifi) {
+        setState(() {
           warningPopupError = true;
           warningPopupText = 'Disconnected from the server, reconnecting';
-        }));
+        });
+      } else if (connectivityResult == ConnectivityResult.mobile) {
+        setState(() {
+          warningPopupError = true;
+          warningPopupText = 'Connect to wifi"';
+        });
+      } else if (connectivityResult == ConnectivityResult.none) {
+        setState(() {
+          warningPopupError = true;
+          warningPopupText = 'Turn on wifi';
+        });
+      }
+    });
     super.initState();
   }
 

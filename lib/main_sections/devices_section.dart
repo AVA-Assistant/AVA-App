@@ -75,6 +75,7 @@ class _DevicesState extends State<Devices> {
         {
           'id': device['id'],
           "type": device['type'],
+          "name": device['name'],
           "mqtt_Id": device['mqtt_Id'],
           'settings': val,
           'status': status,
