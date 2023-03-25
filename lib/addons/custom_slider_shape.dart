@@ -16,6 +16,7 @@ class CustomRoundedRectSliderTrackShape extends SliderTrackShape with BaseSlider
     bool isDiscrete = false,
     bool isEnabled = false,
     double additionalActiveTrackHeight = 2,
+    Offset? secondaryOffset,
   }) {
     assert(sliderTheme.disabledActiveTrackColor != null);
     assert(sliderTheme.disabledInactiveTrackColor != null);

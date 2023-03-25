@@ -13,9 +13,12 @@ class CustomRoundedRectSliderTrackShapeCCT extends SliderTrackShape with BaseSli
     required Animation<double> enableAnimation,
     required TextDirection textDirection,
     required Offset thumbCenter,
+    Size sizeWithOverflow = const Size(20, 20),
+    double textScaleFactor = 20,
     bool isDiscrete = false,
     bool isEnabled = false,
     double additionalActiveTrackHeight = 2,
+    Offset? secondaryOffset,
   }) {
     assert(sliderTheme.disabledActiveTrackColor != null);
     assert(sliderTheme.disabledInactiveTrackColor != null);
