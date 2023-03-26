@@ -1,6 +1,6 @@
 import 'package:ava_app/screens/device_controls/brightness_control.dart';
 import 'package:ava_app/screens/device_controls/cct_control.dart';
-import 'package:ava_app/screens/device_controls/onOff_control.dart';
+import 'package:ava_app/screens/device_controls/on_off_control.dart';
 import 'package:ava_app/screens/device_controls/rgb_cct_control.dart';
 import 'package:ava_app/screens/device_controls/rgb_control.dart';
 import 'package:ava_app/screens/device_controls/unknown_device.dart';

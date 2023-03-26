@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:ava_app/addons/initSocket.dart';
+import 'package:ava_app/addons/init_socket.dart';
 import 'package:ava_app/main_sections/devices_section.dart';
 import 'package:ava_app/main_sections/header_section.dart';
 import 'package:ava_app/main_sections/scenes_section.dart';

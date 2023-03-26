@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-import '../../addons/initSocket.dart';
+import '../../addons/init_socket.dart';
 
 typedef CallbackType = void Function(dynamic val, String status, bool emit);
 

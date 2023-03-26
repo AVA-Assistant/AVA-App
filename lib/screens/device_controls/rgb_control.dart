@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:ava_app/addons/initSocket.dart';
+import 'package:ava_app/addons/init_socket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -69,7 +69,7 @@ class _RgbDeviceState extends State<RgbDevice> {
     setState(() {
       final preProcessedColorStrings = colorFile.split('\n');
 
-      preProcessedColorStrings.forEach((colorStr) {
+      for (var colorStr in preProcessedColorStrings) {
         var split = colorStr.split('\t');
         final name = split[split.length - 1];
         var colors = colorStr.replaceAll('\t', ' ').split(' ')
@@ -77,7 +77,7 @@ class _RgbDeviceState extends State<RgbDevice> {
             return int.tryParse(str) == null;
           });
         colorChoices.add(ColorToName(name, int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2])));
-      });
+      }
 
       if (widget.device["settings"] != {}) {
         sliderValue = widget.device['settings']['brightness'] ?? 0;

@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:ava_app/addons/initSocket.dart';
+import 'package:ava_app/addons/init_socket.dart';
 import 'package:ava_app/addons/predict_color_name.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

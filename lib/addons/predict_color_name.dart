@@ -5,7 +5,7 @@ List<ColorToName> colorChoices = <ColorToName>[];
 final preProcessedColorStrings = colorFile.split('\n');
 
 void initState() {
-  preProcessedColorStrings.forEach((colorStr) {
+  for (var colorStr in preProcessedColorStrings) {
     var split = colorStr.split('\t');
     final name = split[split.length - 1];
     var colors = colorStr.replaceAll('\t', ' ').split(' ')
@@ -13,7 +13,7 @@ void initState() {
         return int.tryParse(str) == null;
       });
     colorChoices.add(ColorToName(name, int.parse(colors[0]), int.parse(colors[1]), int.parse(colors[2])));
-  });
+  }
 }
 
 String predictColorName(int red, int green, int blue) {
