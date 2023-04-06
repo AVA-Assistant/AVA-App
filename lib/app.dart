@@ -35,6 +35,10 @@ class _AppState extends State<App> {
   bool? warningPopupError = false;
   bool? visible = true;
 
+  List errors = [
+    [false, 'Connecting to the server', 0]
+  ];
+
   List scenes = [
     {
       'id': "scene_0",
@@ -78,10 +82,17 @@ class _AppState extends State<App> {
   void initState() {
     socket = initSocket();
 
-    socket.onConnect((data) {
+    socket.onConnect((data) async {
+      var connectivityResult = await (Connectivity().checkConnectivity());
+
+      if (connectivityResult == ConnectivityResult.wifi) {
+        setState(() {
+          errors.removeWhere((element) => element[2] == 1);
+        });
+      }
+
       setState(() {
-        warningPopupError = null;
-        warningPopupText = null;
+        errors.removeWhere((element) => element[2] == 0);
       });
     });
 
@@ -90,18 +101,17 @@ class _AppState extends State<App> {
 
       if (connectivityResult == ConnectivityResult.wifi) {
         setState(() {
-          warningPopupError = true;
-          warningPopupText = 'Disconnected from the server, reconnecting';
+          errors.add([true, 'Disconnected from the server, reconnecting', 0]);
         });
-      } else if (connectivityResult == ConnectivityResult.mobile) {
+      }
+
+      if (connectivityResult == ConnectivityResult.mobile) {
         setState(() {
-          warningPopupError = true;
-          warningPopupText = 'Connect to wifi"';
+          errors.add([true, 'Connect to wifi', 1]);
         });
       } else if (connectivityResult == ConnectivityResult.none) {
         setState(() {
-          warningPopupError = true;
-          warningPopupText = 'Turn on wifi';
+          errors.add([true, 'Turn on wifi', 1]);
         });
       }
     });
@@ -136,7 +146,21 @@ class _AppState extends State<App> {
                   Header(
                     time: time,
                   ),
-                  WarningPopup(error: warningPopupError, text: warningPopupText),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: errors.length,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            WarningPopup(error: errors[index][0], text: errors[index][1]),
+                          ],
+                        );
+                      },
+                    ),
+                  )
                 ]),
                 const SizedBox(height: 40),
                 Scenes(time: time, scenes: scenes),
