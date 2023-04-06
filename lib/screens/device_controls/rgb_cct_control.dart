@@ -30,7 +30,6 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
   double sliderValue = 0;
   int warmLight = 127;
   int coldLight = 128;
-  bool autoLight = false;
   Color lightColor = Colors.white;
   String lightMode = "cct";
 
@@ -38,7 +37,7 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
     String status = '';
 
     if (lightState) {
-      if (lightMode == 'cct' || autoLight) {
+      if (lightMode == 'cct') {
         int distance = 1000;
         var lights = [
           {"name": "Very cold", "warmLight": 0, "color": Colors.blue[300]},
@@ -62,7 +61,7 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
       status = "Off";
     }
 
-    widget.deviceCallback({'state': lightState, 'auto': autoLight, "mode": lightMode, 'brightness': sliderValue, "cold": coldLight, "warm": warmLight, "red": lightColor.red, "green": lightColor.green, "blue": lightColor.blue}, status, emit);
+    widget.deviceCallback({'state': lightState, "mode": lightMode, 'brightness': sliderValue, "cold": coldLight, "warm": warmLight, "red": lightColor.red, "green": lightColor.green, "blue": lightColor.blue}, status, emit);
   }
 
   @override
@@ -76,7 +75,6 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
         lightMode = widget.device["settings"]['mode'] ?? 'cct';
         warmLight = widget.device["settings"]['warm'] ?? 127;
         coldLight = widget.device["settings"]['cold'] ?? 128;
-        autoLight = widget.device["settings"]['auto'] ?? false;
         lightColor = widget.device["settings"]['red'] != null && widget.device["settings"]['green'] != null && widget.device["settings"]['blue'] != null ? Color.fromARGB(255, widget.device["settings"]['red'], widget.device["settings"]['green'], widget.device["settings"]['blue']) : Colors.white;
       }
     });
@@ -89,7 +87,6 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
           lightMode = widget.device["settings"]['mode'];
           warmLight = widget.device["settings"]['warm'];
           coldLight = widget.device["settings"]['cold'];
-          autoLight = widget.device["settings"]['auto'];
           lightColor = Color.fromARGB(255, widget.device["settings"]['red'], widget.device["settings"]['green'], widget.device["settings"]['blue']);
         });
       }
@@ -121,30 +118,12 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.device["name"],
-                        style: GoogleFonts.heebo(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      SizedBox(
-                        height: 45,
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            setState(() => autoLight = !autoLight);
-                            sendData(true);
-                          },
-                          backgroundColor: autoLight ? Colors.purpleAccent[400] : Colors.grey[800],
-                          child: Center(child: Icon(Icons.auto_awesome, size: 30, color: autoLight ? Colors.white : Colors.greenAccent)),
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    widget.device["name"],
+                    style: GoogleFonts.heebo(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Text(
@@ -157,7 +136,7 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
                 ),
               ],
             ),
-            lightMode == 'cct' || autoLight
+            lightMode == 'cct'
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -177,12 +156,11 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
                               value: sliderValue,
                               min: 0,
                               max: 1,
-                              activeColor: lightState && !autoLight ? Colors.white : Colors.grey[600],
+                              activeColor: lightState ? Colors.white : Colors.grey[600],
                               inactiveColor: Colors.grey[800],
                               onChangeStart: ((value) {
                                 setState(() {
                                   lightMode = "cct";
-                                  autoLight = false;
                                 });
                               }),
                               onChanged: (value) {
@@ -220,12 +198,11 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
                               value: coldLight.toDouble(),
                               min: 0,
                               max: 255,
-                              activeColor: lightState && !autoLight ? Colors.white : Colors.grey[400],
+                              activeColor: lightState ? Colors.white : Colors.grey[400],
                               onChangeStart: ((value) {
                                 setState(() {
                                   lightMode = "cct";
                                   lightState = true;
-                                  autoLight = false;
                                 });
                               }),
                               onChanged: (value) {
@@ -278,7 +255,7 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
               child: Column(
                 children: [
-                  if (lightMode == "rgb" && !autoLight)
+                  if (lightMode != 'cct')
                     SliderTheme(
                       data: SliderThemeData(
                         trackHeight: 40,
@@ -307,10 +284,9 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
                         },
                       ),
                     ),
-                  if (lightMode == "rgb" && !autoLight)
-                    const SizedBox(
-                      height: 15,
-                    ),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   CupertinoSlidingSegmentedControl(
                     padding: const EdgeInsets.all(7),
                     thumbColor: Colors.white,
@@ -320,7 +296,7 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
                         child: Text(
                           "CTT",
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: lightMode == 'cct' || autoLight ? const Color(0xff1e1e1e) : Colors.white),
+                          style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: lightMode == 'cct' ? const Color(0xff1e1e1e) : Colors.white),
                         ),
                       ),
                       "rgb": SizedBox(
@@ -328,14 +304,13 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
                         child: Text(
                           "RGB",
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: lightMode == 'rgb' && !autoLight ? const Color(0xff1e1e1e) : Colors.white),
+                          style: GoogleFonts.heebo(fontSize: 20, fontWeight: FontWeight.w500, color: lightMode == 'rgb' ? const Color(0xff1e1e1e) : Colors.white),
                         ),
                       ),
                     },
-                    groupValue: autoLight ? 'cct' : lightMode,
+                    groupValue: lightMode,
                     onValueChanged: (value) {
                       setState(() {
-                        autoLight = false;
                         lightMode = value!;
                         lightState = true;
                       });
@@ -369,7 +344,6 @@ class _RgbCttDeviceState extends State<RgbCttDevice> {
                     groupValue: !lightState ? "off" : "on",
                     onValueChanged: (value) {
                       setState(() {
-                        autoLight = false;
                         lightState = value == "on" ? true : false;
                       });
                       sendData(true);

@@ -73,12 +73,6 @@ class Device extends StatelessWidget {
               builder: (context) => _setTypeOfTile(),
             )
           : null,
-      onDoubleTap: () {
-        if (device["status"] != null && device["settings"] != null && device["settings"]["auto"] != null) {
-          device['settings']['auto'] = !device['settings']['auto'];
-          deviceCallback(device['settings'], device['status'], true);
-        }
-      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
@@ -116,29 +110,13 @@ class Device extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      if (device['settings'] != null ? device['settings']['auto'] == true && device["status"] != null : false)
-                        WidgetSpan(
-                            child: Container(
-                          padding: const EdgeInsets.only(right: 2),
-                          child: Icon(
-                            Icons.auto_awesome,
-                            size: 13,
-                            color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff222222),
-                          ),
-                        )),
-                      TextSpan(
-                        text: device["status"] ?? "Loading...",
-                        style: GoogleFonts.heebo(
-                          color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
-                          fontSize: 11.5,
-                          height: 1.2,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      )
-                    ],
+                Text(
+                  device["status"] ?? "Loading...",
+                  style: GoogleFonts.heebo(
+                    color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
+                    fontSize: 11.5,
+                    height: 1.2,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],

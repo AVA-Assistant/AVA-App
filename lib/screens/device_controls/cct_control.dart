@@ -28,7 +28,6 @@ class _CttDeviceState extends State<CttDevice> {
   double sliderValue = 0;
   int warmLight = 127;
   int coldLight = 128;
-  bool autoLight = false;
 
   void sendData(bool emit) {
     String status = '';
@@ -54,7 +53,7 @@ class _CttDeviceState extends State<CttDevice> {
       status = "Off";
     }
 
-    widget.deviceCallback({'state': lightState, "auto": autoLight, 'brightness': sliderValue, "cold": coldLight, "warm": warmLight}, status, emit);
+    widget.deviceCallback({'state': lightState, 'brightness': sliderValue, "cold": coldLight, "warm": warmLight}, status, emit);
   }
 
   @override
@@ -65,7 +64,6 @@ class _CttDeviceState extends State<CttDevice> {
       if (widget.device["settings"] != {}) {
         sliderValue = widget.device['settings']['brightness'] ?? 0;
         lightState = widget.device["settings"]['state'] ?? false;
-        autoLight = widget.device["settings"]['auto'] ?? false;
         warmLight = widget.device["settings"]['warm'] ?? 127;
         coldLight = widget.device["settings"]['cold'] ?? 128;
       }
@@ -76,7 +74,6 @@ class _CttDeviceState extends State<CttDevice> {
         setState(() {
           sliderValue = widget.device['settings']['brightness'];
           lightState = widget.device["settings"]['state'];
-          autoLight = widget.device["settings"]['auto'];
           warmLight = widget.device["settings"]['warm'];
           coldLight = widget.device["settings"]['cold'];
         });
@@ -109,30 +106,12 @@ class _CttDeviceState extends State<CttDevice> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.device["name"],
-                        style: GoogleFonts.heebo(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      SizedBox(
-                        height: 45,
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            setState(() => autoLight = !autoLight);
-                            sendData(true);
-                          },
-                          backgroundColor: autoLight ? Colors.purpleAccent[400] : Colors.grey[800],
-                          child: Center(child: Icon(Icons.auto_awesome, size: 30, color: autoLight ? Colors.white : Colors.greenAccent)),
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    widget.device["name"],
+                    style: GoogleFonts.heebo(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Text(
@@ -164,11 +143,8 @@ class _CttDeviceState extends State<CttDevice> {
                         value: sliderValue,
                         min: 0,
                         max: 1,
-                        activeColor: lightState && !autoLight ? Colors.white : Colors.grey[600],
+                        activeColor: lightState ? Colors.white : Colors.grey[600],
                         inactiveColor: Colors.grey[800],
-                        onChangeStart: ((value) {
-                          setState(() => autoLight = false);
-                        }),
                         onChanged: (value) {
                           setState(() {
                             sliderValue = value;
@@ -204,10 +180,9 @@ class _CttDeviceState extends State<CttDevice> {
                         value: coldLight.toDouble(),
                         min: 0,
                         max: 255,
-                        activeColor: lightState && !autoLight ? Colors.white : Colors.grey[400],
+                        activeColor: lightState ? Colors.white : Colors.grey[400],
                         onChangeStart: ((value) {
                           setState(() {
-                            autoLight = false;
                             lightState = true;
                           });
                         }),

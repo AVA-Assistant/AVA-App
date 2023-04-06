@@ -22,14 +22,12 @@ class OnOffDevice extends StatefulWidget {
 
 class _OnOffDeviceState extends State<OnOffDevice> {
   bool lightState = false;
-  bool autoLight = false;
 
   void setDeviceState(bool state) {
     setState(() {
       lightState = state;
-      autoLight = false;
     });
-    widget.deviceCallback({'state': state, "auto": autoLight}, state ? "On" : "Off", true);
+    widget.deviceCallback({'state': state}, state ? "On" : "Off", true);
   }
 
   @override
@@ -39,7 +37,6 @@ class _OnOffDeviceState extends State<OnOffDevice> {
     setState(() {
       if (widget.device["settings"] != {}) {
         lightState = widget.device["settings"]['state'] ?? false;
-        autoLight = widget.device["settings"]['auto'] ?? false;
       }
     });
 
@@ -47,7 +44,6 @@ class _OnOffDeviceState extends State<OnOffDevice> {
       if (data["mqtt_Id"] == widget.device["mqtt_Id"] && mounted) {
         setState(() {
           lightState = data['settings']['state'];
-          autoLight = widget.device["settings"]['auto'];
         });
       }
     });
@@ -77,30 +73,12 @@ class _OnOffDeviceState extends State<OnOffDevice> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.device["name"],
-                        style: GoogleFonts.heebo(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      SizedBox(
-                        height: 45,
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            setState(() => autoLight = !autoLight);
-                            widget.deviceCallback({'state': lightState, "auto": autoLight}, lightState ? "On" : "Off", true);
-                          },
-                          backgroundColor: autoLight ? Colors.purpleAccent[400] : Colors.grey[800],
-                          child: Center(child: Icon(Icons.auto_awesome, size: 30, color: autoLight ? Colors.white : Colors.greenAccent)),
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    widget.device["name"],
+                    style: GoogleFonts.heebo(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Text(

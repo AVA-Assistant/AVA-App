@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-
 import '../../addons/custom_slider_shape.dart';
 
 typedef CallbackType = void Function(dynamic val, String status, bool emit);

@@ -18,7 +18,6 @@ class Header extends StatefulWidget {
 class _HeaderState extends State<Header> {
   double? temp;
   double? humidity;
-  int? pearsonCount;
 
   @override
   void initState() {
@@ -29,7 +28,6 @@ class _HeaderState extends State<Header> {
       setState(() {
         temp = data['temp'];
         humidity = data['humidity'];
-        pearsonCount = data['pearsonCount'];
       });
     });
 
@@ -54,7 +52,7 @@ Bartosz''',
         const SizedBox(height: 10),
         IntrinsicHeight(
           child: Row(
-            children: temp != null && humidity != null && pearsonCount != null
+            children: temp != null && humidity != null
                 ? [
                     RichText(
                       text: TextSpan(
@@ -85,25 +83,6 @@ Bartosz''',
                         ],
                       ),
                     ),
-                    VerticalDivider(
-                      thickness: 1,
-                      width: 20,
-                      color: widget.time == "morning" ? const Color(0xff333333) : const Color(0xffeeeeee),
-                    ),
-                    Icon(
-                      Icons.person,
-                      size: 18,
-                      color: widget.time == "morning" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
-                    ),
-                    Text(
-                      "$pearsonCount",
-                      style: GoogleFonts.ubuntu(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: widget.time == "morning" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
-                      ),
-                    ),
-                    const SizedBox(width: 20)
                   ]
                 : [],
           ),
