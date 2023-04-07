@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,15 +14,21 @@ class WarningPopup extends StatefulWidget {
 
 class _WarningPopupState extends State<WarningPopup> {
   bool visible = true;
-  late Future _delayedFuture;
+  late Timer _timer;
 
   @override
   void initState() {
-    _delayedFuture = Future.delayed(const Duration(seconds: 5), () {
+    _timer = Timer(const Duration(seconds: 5), () {
       setState(() => visible = false);
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -45,8 +53,9 @@ class _WarningPopupState extends State<WarningPopup> {
         const SizedBox(width: 10),
         GestureDetector(
           onTap: () {
+            _timer.cancel();
             if (!visible) {
-              _delayedFuture = Future.delayed(const Duration(seconds: 3), () {
+              _timer = Timer(const Duration(seconds: 3), () {
                 setState(() => visible = false);
               });
             }

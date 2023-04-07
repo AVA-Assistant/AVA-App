@@ -31,10 +31,6 @@ class _AppState extends State<App> {
     }
   }
 
-  String? warningPopupText = 'Connecting to the server';
-  bool? warningPopupError = false;
-  bool? visible = true;
-
   List errors = [
     [false, 'Connecting to the server', 0]
   ];
@@ -110,11 +106,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     String time = getCurrentTime();
     scenes.sort((a, b) => a["name"].length.compareTo(b["name"].length));
-    Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        visible = false;
-      });
-    });
+
     return Container(
       constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
       decoration: BoxDecoration(
