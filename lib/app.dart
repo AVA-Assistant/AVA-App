@@ -83,15 +83,9 @@ class _AppState extends State<App> {
     socket = initSocket();
 
     socket.onConnect((data) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult == ConnectivityResult.wifi) {
-        setState(() {
-          errors.removeWhere((element) => element[2] == 1);
-        });
-      }
-
       setState(() {
+        errors.removeWhere((element) => element[2] == 1);
+
         errors.removeWhere((element) => element[2] == 0);
       });
     });
@@ -99,17 +93,11 @@ class _AppState extends State<App> {
     socket.onDisconnect((data) async {
       var connectivityResult = await (Connectivity().checkConnectivity());
 
-      if (connectivityResult == ConnectivityResult.wifi) {
-        setState(() {
-          errors.add([true, 'Disconnected from the server, reconnecting', 0]);
-        });
-      }
+      setState(() {
+        errors.add([true, 'Disconnected from the server, reconnecting', 0]);
+      });
 
-      if (connectivityResult == ConnectivityResult.mobile) {
-        setState(() {
-          errors.add([true, 'Connect to wifi', 1]);
-        });
-      } else if (connectivityResult == ConnectivityResult.none) {
+      if (connectivityResult != ConnectivityResult.wifi) {
         setState(() {
           errors.add([true, 'Turn on wifi', 1]);
         });
