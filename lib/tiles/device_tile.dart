@@ -74,6 +74,8 @@ class Device extends StatelessWidget {
             )
           : null,
       child: AnimatedContainer(
+        height: 75,
+        width: (MediaQuery.of(context).size.width - 50) / 2,
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -81,47 +83,49 @@ class Device extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: Row(children: [
-            Container(
-              height: 35,
-              width: 35,
-              decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(50)), color: Color(0xCC141414)),
-              child: Center(
-                child: Icon(
-                  IconData(device["icon"], fontFamily: CupertinoIcons.iconFont, fontPackage: CupertinoIcons.iconFontPackage),
-                  size: 24,
-                  color: Colors.white,
+          child: Row(
+            children: [
+              Container(
+                height: 35,
+                width: 35,
+                decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(50)), color: Color(0xCC141414)),
+                child: Center(
+                  child: Icon(
+                    IconData(device["icon"], fontFamily: CupertinoIcons.iconFont, fontPackage: CupertinoIcons.iconFontPackage),
+                    size: 24,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  device["name"],
-                  style: GoogleFonts.heebo(
-                    color: device["status"] == "Off" || device["status"] == null ? const Color(0xFFFFFFFF) : const Color(0xff333333),
-                    fontSize: 14,
-                    height: 1.2,
-                    fontWeight: FontWeight.w500,
+              const SizedBox(
+                width: 12,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    device["name"],
+                    style: GoogleFonts.heebo(
+                      color: device["status"] == "Off" || device["status"] == null ? const Color(0xFFFFFFFF) : const Color(0xff333333),
+                      fontSize: 14,
+                      height: 1.2,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                Text(
-                  device["status"] ?? "Loading...",
-                  style: GoogleFonts.heebo(
-                    color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
-                    fontSize: 11.5,
-                    height: 1.2,
-                    fontWeight: FontWeight.w400,
+                  Text(
+                    device["status"] ?? "Loading...",
+                    style: GoogleFonts.heebo(
+                      color: device["status"] == "Off" || device["status"] == null ? const Color(0xB1FFFFFF) : const Color(0xff333333),
+                      fontSize: 11.5,
+                      height: 1.2,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
-            )
-          ]),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

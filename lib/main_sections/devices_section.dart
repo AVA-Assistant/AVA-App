@@ -42,7 +42,7 @@ class _DevicesState extends State<Devices> {
       for (var tempDevice in newDevices) {
         tempDevice["status"] = null;
       }
-      setState(() => devices = newDevices);
+      // setState(() => devices = newDevices);
     }
 
     socket.onConnect((data) => socket.emit("setupDevices", [appBox.get("devices")]));
@@ -138,22 +138,15 @@ class _DevicesState extends State<Devices> {
           ),
           const SizedBox(height: 15),
           if (devices!.isNotEmpty)
-            GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: devices?.length,
-              itemBuilder: (_, index) {
-                return Device(
-                  device: devices![index],
-                  deviceCallback: (val, status, emit) => setStats(val, index, status, emit),
-                );
-              },
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 9 / 4,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 20,
-              ),
+            Wrap(
+              runSpacing: 20,
+              spacing: 10,
+              children: devices!
+                  .map((e) => Device(
+                        device: e,
+                        deviceCallback: (val, status, emit) => setStats(val, devices?.indexOf(e), status, emit),
+                      ))
+                  .toList(),
             ),
         ],
       ),
