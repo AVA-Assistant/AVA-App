@@ -14,6 +14,8 @@ class Scenes extends StatelessWidget {
   final String time;
 
   List<Widget> createScenes() {
+    scenes.sort((a, b) => a["name"].length.compareTo(b["name"].length));
+
     if (scenes.length > 3) {
       return [
         Row(
@@ -56,32 +58,29 @@ class Scenes extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: TextButton(
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-            ),
-            onPressed: () {},
-            child: IntrinsicWidth(
-              child: Row(
-                children: [
-                  Text(
-                    "Scenes",
-                    style: GoogleFonts.ubuntu(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
-                      color: time == "morning" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 24,
+        TextButton(
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+          ),
+          onPressed: () {},
+          child: IntrinsicWidth(
+            child: Row(
+              children: [
+                Text(
+                  "Scenes",
+                  style: GoogleFonts.ubuntu(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
                     color: time == "morning" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
-                  )
-                ],
-              ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 24,
+                  color: time == "morning" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
+                ),
+              ],
             ),
           ),
         ),
@@ -90,7 +89,17 @@ class Scenes extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: createScenes(),
+            // children: createScenes(),
+            children: [
+              Container(
+                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 1.6),
+                child: Wrap(
+                  spacing: 20,
+                  runSpacing: 20,
+                  children: scenes.map((e) => SceneTile(scene: e)).toList(),
+                ),
+              ),
+            ],
           ),
         )
       ],

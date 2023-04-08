@@ -20,11 +20,11 @@ class _AppState extends State<App> {
   String getCurrentTime() {
     final now = DateTime.now();
 
-    if (now.hour >= 5 && now.hour < 11) {
+    if (now.hour >= 5 && now.hour < 12) {
       return "morning";
-    } else if (now.hour >= 11 && now.hour < 17) {
+    } else if (now.hour >= 12 && now.hour < 19) {
       return "afternoon";
-    } else if (now.hour >= 17 && now.hour < 23) {
+    } else if (now.hour >= 19 && now.hour < 23) {
       return "evening";
     } else {
       return "night";
@@ -105,7 +105,6 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     String time = getCurrentTime();
-    scenes.sort((a, b) => a["name"].length.compareTo(b["name"].length));
 
     return Container(
       constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
