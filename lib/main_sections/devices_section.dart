@@ -122,14 +122,14 @@ class _DevicesState extends State<Devices> {
                       style: GoogleFonts.ubuntu(
                         fontWeight: FontWeight.bold,
                         fontSize: 26,
-                        color: widget.time == "morning" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
+                        color: widget.time == "morning" || widget.time == "midday" || widget.time == "midday" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
                       ),
                     ),
                     const SizedBox(width: 10),
                     Icon(
                       Icons.arrow_forward_ios_rounded,
                       size: 24,
-                      color: widget.time == "morning" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
+                      color: widget.time == "morning" || widget.time == "midday" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
                     )
                   ],
                 ),

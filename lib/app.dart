@@ -20,14 +20,16 @@ class _AppState extends State<App> {
   String getCurrentTime() {
     final now = DateTime.now();
 
-    if (now.hour >= 5 && now.hour < 12) {
+    if (now.hour >= 5 && now.hour < 10) {
       return "morning";
-    } else if (now.hour >= 12 && now.hour < 19) {
+    } else if (now.hour >= 10 && now.hour < 16) {
+      return "midday";
+    } else if (now.hour >= 16 && now.hour < 19) {
       return "afternoon";
-    } else if (now.hour >= 19 && now.hour < 23) {
+    } else if (now.hour >= 19 && now.hour < 24) {
       return "evening";
     } else {
-      return "night";
+      return "midday";
     }
   }
 

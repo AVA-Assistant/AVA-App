@@ -15,6 +15,30 @@ class DevicesScreen extends StatefulWidget {
 }
 
 class _DevicesScreenState extends State<DevicesScreen> {
+  void showPopup(index) {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+              title: const Text('Warning!'),
+              content: Text('Are you sure you want to delete "${widget.devices[index]["name"]}" device?'),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                CupertinoDialogAction(
+                  isDestructiveAction: true,
+                  onPressed: () {
+                    setState(() => widget.devices.removeAt(index));
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,15 +84,14 @@ class _DevicesScreenState extends State<DevicesScreen> {
         child: ReorderableListView.builder(
           shrinkWrap: true,
           itemBuilder: (_, index) => Padding(
-            key: Key(index.toString()),
+            key: ObjectKey(widget.devices[index]),
             padding: const EdgeInsets.only(top: 15),
             child: Slidable(
               closeOnScroll: true,
-              key: ValueKey(index),
               endActionPane: ActionPane(
                 motion: const DrawerMotion(),
                 dismissible: DismissiblePane(
-                  onDismissed: () => setState(() => widget.devices.removeAt(index)),
+                  onDismissed: () => showPopup(index),
                 ),
                 children: [
                   SlidableAction(
@@ -101,29 +124,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                     label: 'Edit',
                   ),
                   SlidableAction(
-                    // onPressed: (context) => setState(() => widget.devices.removeAt(index)),
-                    onPressed: (context) => showCupertinoModalPopup(
-                      context: context,
-                      builder: (BuildContext context) => CupertinoAlertDialog(
-                        title: const Text('Warning!'),
-                        content: Text('Are you sure you want to delete "${widget.devices[index]["name"]}" device?'),
-                        actions: <CupertinoDialogAction>[
-                          CupertinoDialogAction(
-                            isDefaultAction: true,
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
-                          CupertinoDialogAction(
-                            isDestructiveAction: true,
-                            onPressed: () {
-                              setState(() => widget.devices.removeAt(index));
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Yes'),
-                          ),
-                        ],
-                      ),
-                    ),
+                    onPressed: (context) => showPopup(index),
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     icon: Icons.delete,

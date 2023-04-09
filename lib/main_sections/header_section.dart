@@ -45,7 +45,7 @@ Bartosz''',
           style: GoogleFonts.ubuntu(
             fontWeight: FontWeight.bold,
             fontSize: 34,
-            color: widget.time == "morning" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
+            color: widget.time == "morning" || widget.time == "midday" ? const Color(0xff1e1e1e) : const Color(0xffffffff),
           ),
           textAlign: TextAlign.left,
         ),
@@ -58,7 +58,7 @@ Bartosz''',
                       text: TextSpan(
                         style: GoogleFonts.heebo(
                           fontSize: 14.0,
-                          color: widget.time == "morning" ? const Color(0xff333333) : const Color(0xffeeeeee),
+                          color: widget.time == "morning" || widget.time == "midday" ? const Color(0xff333333) : const Color(0xffeeeeee),
                         ),
                         children: [
                           const TextSpan(text: 'Temp: '),
@@ -69,13 +69,13 @@ Bartosz''',
                     VerticalDivider(
                       thickness: 1,
                       width: 20,
-                      color: widget.time == "morning" ? const Color(0xff333333) : const Color(0xffeeeeee),
+                      color: widget.time == "morning" || widget.time == "midday" ? const Color(0xff333333) : const Color(0xffeeeeee),
                     ),
                     RichText(
                       text: TextSpan(
                         style: GoogleFonts.heebo(
                           fontSize: 14.0,
-                          color: widget.time == "morning" ? const Color(0xff333333) : const Color(0xffeeeeee),
+                          color: widget.time == "morning" || widget.time == "midday" ? const Color(0xff333333) : const Color(0xffeeeeee),
                         ),
                         children: [
                           const TextSpan(text: 'Humidity: '),
