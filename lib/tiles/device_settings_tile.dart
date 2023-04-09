@@ -4,8 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class DeviceSettings extends StatelessWidget {
   final Map device;
+  final bool reorderEnabled;
 
-  const DeviceSettings({super.key, required this.device});
+  const DeviceSettings({super.key, required this.device, required this.reorderEnabled});
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +48,12 @@ class DeviceSettings extends StatelessWidget {
               ),
             ),
           ),
-          Icon(
-            Icons.drag_indicator,
-            size: 35,
-            color: Colors.grey[850],
-          ),
+          if (reorderEnabled)
+            Icon(
+              Icons.drag_indicator,
+              size: 35,
+              color: Colors.grey[850],
+            ),
         ]),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:ava_app/screens/add_device_screen.dart';
 import 'package:ava_app/tiles/device_settings_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shake_animated/flutter_shake_animated.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../addons/init_socket.dart';
 
@@ -15,6 +16,8 @@ class DevicesScreen extends StatefulWidget {
 }
 
 class _DevicesScreenState extends State<DevicesScreen> {
+  bool reorderEnabled = false;
+
   void showPopup(index) {
     showCupertinoModalPopup(
         context: context,
@@ -37,6 +40,96 @@ class _DevicesScreenState extends State<DevicesScreen> {
                 ),
               ],
             ));
+  }
+
+  Widget returnListView() {
+    if (reorderEnabled) {
+      return ReorderableListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (_, index) => Padding(
+          key: ObjectKey(widget.devices[index]),
+          padding: const EdgeInsets.only(top: 15),
+          child: ShakeWidget(
+            shakeConstant: ShakeLittleConstant1(),
+            autoPlay: true,
+            child: DeviceSettings(
+              device: widget.devices[index],
+              reorderEnabled: reorderEnabled,
+            ),
+          ),
+        ),
+        itemCount: widget.devices.length,
+        onReorder: (int oldIndex, int newIndex) {
+          setState(() {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            final item = widget.devices.removeAt(oldIndex);
+            widget.devices.insert(newIndex, item);
+          });
+        },
+      );
+    } else {
+      return ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (_, index) => Padding(
+          key: ObjectKey(widget.devices[index]),
+          padding: const EdgeInsets.only(top: 15),
+          child: Slidable(
+            closeOnScroll: true,
+            endActionPane: ActionPane(
+              motion: const DrawerMotion(),
+              dismissible: DismissiblePane(
+                onDismissed: () => showPopup(index),
+              ),
+              children: [
+                SlidableAction(
+                  onPressed: (context) async {
+                    Map? newDevice = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddDevice(
+                          icon: widget.devices[index]["icon"],
+                          name: widget.devices[index]["name"],
+                          mqtt: {
+                            "type": widget.devices[index]["type"],
+                            "id": widget.devices[index]["id"],
+                            "mqtt_Id": widget.devices[index]["mqtt_Id"],
+                          },
+                        ),
+                      ),
+                    );
+                    setState(() {
+                      if (newDevice != null) {
+                        widget.devices.removeAt(index);
+                        widget.devices.insert(index, newDevice);
+                        socket.emit("setupDevices", [widget.devices]);
+                      }
+                    });
+                  },
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.white,
+                  icon: Icons.edit,
+                  label: 'Edit',
+                ),
+                SlidableAction(
+                  onPressed: (context) => showPopup(index),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                ),
+              ],
+            ),
+            child: DeviceSettings(
+              device: widget.devices[index],
+              reorderEnabled: reorderEnabled,
+            ),
+          ),
+        ),
+        itemCount: widget.devices.length,
+      );
+    }
   }
 
   @override
@@ -69,8 +162,22 @@ class _DevicesScreenState extends State<DevicesScreen> {
       backgroundColor: const Color(0xFF1E1E1E),
       appBar: CupertinoNavigationBar(
         backgroundColor: Colors.transparent,
-        leading: TextButton(
-          onPressed: () => Navigator.pop(context),
+        trailing: ShakeWidget(
+          autoPlay: reorderEnabled,
+          shakeConstant: ShakeLittleConstant1(),
+          child: GestureDetector(
+            onTap: () => setState(() {
+              reorderEnabled = !reorderEnabled;
+            }),
+            child: const Icon(
+              Icons.reorder_rounded,
+              color: Colors.white,
+              size: 30,
+            ),
+          ),
+        ),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
           child: const Icon(
             Icons.arrow_back,
             color: Colors.white,
@@ -81,73 +188,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ReorderableListView.builder(
-          shrinkWrap: true,
-          itemBuilder: (_, index) => Padding(
-            key: ObjectKey(widget.devices[index]),
-            padding: const EdgeInsets.only(top: 15),
-            child: Slidable(
-              closeOnScroll: true,
-              endActionPane: ActionPane(
-                motion: const DrawerMotion(),
-                dismissible: DismissiblePane(
-                  onDismissed: () => showPopup(index),
-                ),
-                children: [
-                  SlidableAction(
-                    onPressed: (context) async {
-                      Map? newDevice = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddDevice(
-                            icon: widget.devices[index]["icon"],
-                            name: widget.devices[index]["name"],
-                            mqtt: {
-                              "type": widget.devices[index]["type"],
-                              "id": widget.devices[index]["id"],
-                              "mqtt_Id": widget.devices[index]["mqtt_Id"],
-                            },
-                          ),
-                        ),
-                      );
-                      setState(() {
-                        if (newDevice != null) {
-                          widget.devices.removeAt(index);
-                          widget.devices.insert(index, newDevice);
-                          socket.emit("setupDevices", [widget.devices]);
-                        }
-                      });
-                    },
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                    icon: Icons.edit,
-                    label: 'Edit',
-                  ),
-                  SlidableAction(
-                    onPressed: (context) => showPopup(index),
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    icon: Icons.delete,
-                    label: 'Delete',
-                  ),
-                ],
-              ),
-              child: DeviceSettings(
-                device: widget.devices[index],
-              ),
-            ),
-          ),
-          itemCount: widget.devices.length,
-          onReorder: (int oldIndex, int newIndex) {
-            setState(() {
-              if (oldIndex < newIndex) {
-                newIndex -= 1;
-              }
-              final item = widget.devices.removeAt(oldIndex);
-              widget.devices.insert(newIndex, item);
-            });
-          },
-        ),
+        child: returnListView(),
       ),
     );
   }
